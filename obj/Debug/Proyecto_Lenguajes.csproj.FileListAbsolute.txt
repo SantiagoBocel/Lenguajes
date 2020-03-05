@@ -1,0 +1,6 @@
+C:\Users\Usuario\Desktop\Quinto ciclo\Lenguajes Automatas\Proyecto_Lenguajes\bin\Debug\Proyecto_Lenguajes.exe.config
+C:\Users\Usuario\Desktop\Quinto ciclo\Lenguajes Automatas\Proyecto_Lenguajes\bin\Debug\Proyecto_Lenguajes.exe
+C:\Users\Usuario\Desktop\Quinto ciclo\Lenguajes Automatas\Proyecto_Lenguajes\bin\Debug\Proyecto_Lenguajes.pdb
+C:\Users\Usuario\Desktop\Quinto ciclo\Lenguajes Automatas\Proyecto_Lenguajes\obj\Debug\Proyecto_Lenguajes.csprojAssemblyReference.cache
+C:\Users\Usuario\Desktop\Quinto ciclo\Lenguajes Automatas\Proyecto_Lenguajes\obj\Debug\Proyecto_Lenguajes.exe
+C:\Users\Usuario\Desktop\Quinto ciclo\Lenguajes Automatas\Proyecto_Lenguajes\obj\Debug\Proyecto_Lenguajes.pdb
