@@ -106,23 +106,16 @@ namespace Proyecto_Lenguajes
                         #region Tokens                        
                         linea = archivo.ReadLine().Replace("\t", "");
                         do
-                        {
-                            //crear expresion regular
-                            if (linea.Contains("'''"))
-                            {
-                                linea = linea.Replace("\t", "").Replace("'''", "'").Replace("  ", " ").Replace(("'" + '"' + "'").ToString(), ('"').ToString());
-                            }
-                            else
-                            {
-                                linea = linea.Replace("\t", "").Replace("'", "").Replace("  ", " ");
-                            }
-                            var T_Id = linea.Substring(0, linea.IndexOf('='));
-                            var Expresion = linea.Remove(0, linea.IndexOf('=') + 1).Trim();
+                        {          
+                            // mandar al arbol
+                            var T_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();
+                            var Expresion = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace("DIGITO","D").Replace("LETRA","L").Replace("CHARSET","C");                           
                             arbol.ExpresionesRegulares += $"({Expresion})|";
                             linea = archivo.ReadLine();
                         }
                         while (linea != "ACTIONS");
                         arbol.ConvertirExprecionaTokens();
+                        arbol.insertar();
                         #endregion
                         break;
                     case "actions":
