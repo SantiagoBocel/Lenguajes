@@ -9,16 +9,18 @@ namespace Proyecto_Lenguajes
 {
     class Program
     {
+       
         static void Main(string[] args)
         {
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
-            Dictionary<string, List<char>> Set_NT = new Dictionary<string, List<char>>();           
-             List<string> caracteres = new List<string>();
+            Dictionary<string, List<char>> Set_NT = new Dictionary<string, List<char>>();                      
+            Queue<string> pila_Token = new Queue<string>();
+            List<string> caracteres = new List<string>();
             Console.WriteLine("Ingresar archivo");
             var path = Console.ReadLine();
             var archivo = new StreamReader(path);
-            var linea = archivo.ReadLine();
+            var linea = archivo.ReadLine();           
             while (linea != null)
             {
                 linea = linea.Trim().ToLower();
@@ -104,18 +106,34 @@ namespace Proyecto_Lenguajes
                        break;
                     case "tokens":
                         #region Tokens                        
-                        linea = archivo.ReadLine().Replace("\t", "");
+                        linea = archivo.ReadLine().Replace("\t", "");                        
+                        pila_Token.Enqueue("0(");
                         do
-                        {          
-                            // mandar al arbol
-                            var T_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();
-                            var Expresion = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace("DIGITO","D").Replace("LETRA","L").Replace("CHARSET","C");                           
-                            arbol.ExpresionesRegulares += $"({Expresion})|";
+                        {                                     
+                            var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace(" ", ".").Split('.');   //  Replace("DIGITO","D").Replace("LETRA","L").Replace("CHARSET","C")                      
+                            //arbol.ExpresionesRegulares += $"({Expresion})|";
+                            for (int i = 0; i < Arreglo_expresiones.Length; i++)
+                            {
+                                string dato = Arreglo_expresiones[i];
+                                if (Set_NT.ContainsKey(dato))
+                                {
+                                    pila_Token.Enqueue(dato);
+                                }
+                                else
+                                {                               
+                                   pila_Token.Enqueue(dato);                                      
+                                }                                
+                            }
                             linea = archivo.ReadLine();
+                            if (linea == "ACTIONS")
+                            {
+                                pila_Token.Enqueue(")0");
+                            }
                         }
-                        while (linea != "ACTIONS");
-                        arbol.ConvertirExprecionaTokens();
-                        arbol.insertar();
+                        while (linea != "ACTIONS");                        
+                        arbol.insertar(pila_Token);
+                        
                         #endregion
                         break;
                     case "actions":
