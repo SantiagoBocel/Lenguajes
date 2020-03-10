@@ -108,11 +108,12 @@ namespace Proyecto_Lenguajes
                         #region Tokens                        
                         linea = archivo.ReadLine().Replace("\t", "");                      
                         pila_Token.Enqueue("(");
+                        bool bandera = false;
                         do
                         {
-                            
                             //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace("'", "").Replace(" ",".").Split('.');                           
+                           
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace("'", "").Replace(" ",".").Split('.');                                                        
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 string dato = Arreglo_expresiones[i];
@@ -129,11 +130,12 @@ namespace Proyecto_Lenguajes
                                    pila_Token.Enqueue(dato);                                      
                                 }                                
                             }
+                           
                             linea = archivo.ReadLine();
-                            if (linea == "ACTIONS")
-                            {
-                                pila_Token.Enqueue(")");
-                            }
+                            //if (linea == "ACTIONS")
+                            //{
+                            //    pila_Token.Enqueue(")");
+                            //}
                         }
                         while (linea != "ACTIONS");                        
                         arbol.insertar(pila_Token);

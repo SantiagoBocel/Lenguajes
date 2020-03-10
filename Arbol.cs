@@ -96,36 +96,37 @@ namespace Proyecto_Lenguajes
                         {
                             T.Push(Evaluar);
                         }
-                    }               
-                else
+                    }
+                    //else if (Evaluar == ")")
+                    //{
+                    //    while (T.Count > 0 && (T.Peek() != "("))
+                    //    {
+                    //        if (T.Count == 0)
+                    //        {
+                    //            Console.WriteLine("faltan operandos");
+                    //        }
+                    //        if (S.Count < 2)
+                    //        {
+                    //            Console.WriteLine("faltan operadandos");
+                    //        }
+                    //        Temp = new Nodo(T.Pop());
+                    //        Temp.Padre = null;
+                    //        Temp.Der = S.Pop();
+                    //        Temp.Der.Padre = Temp.Dato;
+                    //        Temp.Izq = S.Pop();
+                    //        Temp.Izq.Padre = Temp.Dato;
+                    //        S.Push(Temp);
+                    //    }
+                    //    T.Pop();
+                    //}
+                    else
                     {
                         nodo = new Nodo(Evaluar);
                         nodo.Padre = null;
                         S.Push(nodo);
                     }
                 }                
-                else if (Evaluar == ")")
-                {
-                    while (T.Count > 0 && (T.Peek() != "("))
-                    {
-                        if (T.Count == 0)
-                        {
-                            Console.WriteLine("faltan operandos");
-                        }
-                        if (S.Count < 2)
-                        {
-                            Console.WriteLine("faltan operadandos");
-                        }
-                        Temp = new Nodo(T.Pop());
-                        Temp.Padre = null;
-                        Temp.Der = S.Pop();
-                        Temp.Der.Padre = Temp.Dato;
-                        Temp.Izq = S.Pop();
-                        Temp.Izq.Padre = Temp.Dato;
-                        S.Push(Temp);
-                    }
-                    T.Pop();
-                }
+               
                 else
                 {
                     Console.WriteLine("El Dato:{0} No existe en los Set",Evaluar);
