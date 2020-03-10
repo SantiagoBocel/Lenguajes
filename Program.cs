@@ -14,7 +14,7 @@ namespace Proyecto_Lenguajes
         {
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
-            Dictionary<string, List<char>> Set_NT = new Dictionary<string, List<char>>();                      
+            Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
             Queue<string> pila_Token = new Queue<string>();
             List<string> caracteres = new List<string>();
             Console.WriteLine("Ingresar archivo");
@@ -33,7 +33,7 @@ namespace Proyecto_Lenguajes
                         {
                             int num = 0;
                             var Terminal = linea.Split('=');
-                            Set_NT.Add(Terminal[num], new List<char>());
+                            Set_NT.Add(Terminal[num], new List<string>());
                             var Valores = Terminal[num + 1].Replace("'", "");
                             var Dato = Valores.Split('+');
                             foreach (var item in  Dato)
@@ -52,7 +52,7 @@ namespace Proyecto_Lenguajes
                                         }
                                         foreach (var dato in caracteres)
                                         {
-                                            Set_NT[Terminal[num]].Add(Convert.ToChar(dato));
+                                            Set_NT[Terminal[num]].Add(dato);
                                         }
                                         break;                                       
                                     case 15:
@@ -66,7 +66,7 @@ namespace Proyecto_Lenguajes
                                         }
                                         foreach (var dato in caracteres)
                                         {
-                                            Set_NT[Terminal[num]].Add(Convert.ToChar(dato));
+                                            Set_NT[Terminal[num]].Add(dato);
                                         }
                                         break;
                                     case 16:
@@ -80,18 +80,18 @@ namespace Proyecto_Lenguajes
                                         }
                                         foreach (var dato in caracteres)
                                         {
-                                            Set_NT[Terminal[num]].Add(Convert.ToChar(dato));
+                                            Set_NT[Terminal[num]].Add(dato);
                                         }
                                         break;
                                     case 2:
                                         for (int i = Ndato[0]; i <= Ndato[1]; i++)
                                         {
 
-                                            Set_NT[Terminal[num]].Add((char)i);
+                                            Set_NT[Terminal[num]].Add(Convert.ToString((char)i));
                                         }
                                         break;
                                     case 1:
-                                        Set_NT[Terminal[num]].Add(Ndato[0]);
+                                        Set_NT[Terminal[num]].Add(Convert.ToString( Ndato[0]));
                                         break;
                                     default:
                                         Console.WriteLine("Error");
@@ -106,16 +106,20 @@ namespace Proyecto_Lenguajes
                        break;
                     case "tokens":
                         #region Tokens                        
-                        linea = archivo.ReadLine().Replace("\t", "");                        
-                        pila_Token.Enqueue("0(");
+                        linea = archivo.ReadLine().Replace("\t", "");                      
+                        pila_Token.Enqueue("(");
                         do
-                        {                                     
-                            var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace(" ", ".").Split('.');   //  Replace("DIGITO","D").Replace("LETRA","L").Replace("CHARSET","C")                      
-                            //arbol.ExpresionesRegulares += $"({Expresion})|";
+                        {
+                            
+                            //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace("'", "").Replace(" ",".").Split('.');                           
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 string dato = Arreglo_expresiones[i];
+                                if (dato == "")
+                                {
+                                    dato = ".";
+                                }
                                 if (Set_NT.ContainsKey(dato))
                                 {
                                     pila_Token.Enqueue(dato);
@@ -128,11 +132,12 @@ namespace Proyecto_Lenguajes
                             linea = archivo.ReadLine();
                             if (linea == "ACTIONS")
                             {
-                                pila_Token.Enqueue(")0");
+                                pila_Token.Enqueue(")");
                             }
                         }
                         while (linea != "ACTIONS");                        
                         arbol.insertar(pila_Token);
+                        
                         
                         #endregion
                         break;
