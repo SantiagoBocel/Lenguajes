@@ -10,6 +10,9 @@ namespace Proyecto_Lenguajes
     {
         public string Padre { get; set; }
         public string Dato { get; set; }
+        public List<int> First = new List<int>();
+        public List<int> Last = new List<int>();
+        public bool Nulable = false;
         public Nodo Izq { set; get; }
         public Nodo Der { set; get; }
         public Nodo(string data)
@@ -17,7 +20,7 @@ namespace Proyecto_Lenguajes
             Dato = data;
             Der = null;
             Izq = null;
-
+            
         }
 
 

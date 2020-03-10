@@ -12,6 +12,7 @@ namespace Proyecto_Lenguajes
        
         static void Main(string[] args)
         {
+            List<string> Operadores = new List<string>();
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
             Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
@@ -20,7 +21,12 @@ namespace Proyecto_Lenguajes
             Console.WriteLine("Ingresar archivo");
             var path = Console.ReadLine();
             var archivo = new StreamReader(path);
-            var linea = archivo.ReadLine();           
+            var linea = archivo.ReadLine();
+            Operadores.Add(".");
+            Operadores.Add("*");
+            Operadores.Add("?");
+            Operadores.Add("+");
+            Operadores.Add("|");
             while (linea != null)
             {
                 linea = linea.Trim().ToLower();
@@ -105,28 +111,49 @@ namespace Proyecto_Lenguajes
                             #endregion
                        break;
                     case "tokens":
-                        #region Tokens                        
+                        #region Tokens 
+                        var Simbolos_P = ("\"|ç0");
+                        var Simbolo_S = ("'''");                      
                         linea = archivo.ReadLine().Replace("\t", "");                      
                         pila_Token.Enqueue("(");                        
                         do
                         {
-                            //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();                           
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace("'", "").Replace(" ",".").Split('.');                                                        
+                            //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();                                                                                
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_S}","'ç0'").Replace("'", "").Split(' ');                                                                                    
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
+                                
                                 string dato = Arreglo_expresiones[i];
+                                #region Token 2
+                                if (dato == "ç0")
+                                {
+                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("'");
+                                    pila_Token.Enqueue(".");
+                                }
+                                if (dato == Simbolos_P)
+                                {
+                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("\"");
+                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("|");
+                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("'");
+                                    pila_Token.Enqueue(".");
+                                }
+                                #endregion                                
                                 if (dato == "")
                                 {
                                     dato = ".";
                                 }
                                 if (Set_NT.ContainsKey(dato))
-                                {
-                                    pila_Token.Enqueue(dato);
+                                {                                    
+                                 pila_Token.Enqueue(dato);                                                                                                                                                                                                                            
                                 }
-                                else
-                                {                               
-                                   pila_Token.Enqueue(dato);                                      
-                                }                                
+                                if( arbol.ValorsNT.Contains(dato))                                
+                                {                                 
+                                    pila_Token.Enqueue(dato);                                                                     
+                                }                                                               
                             }
                             pila_Token.Enqueue("|");
                             linea = archivo.ReadLine();

@@ -11,10 +11,11 @@ namespace Proyecto_Lenguajes
     {
         //Terminar el arbol
         static public List<string> Operadores = new List<string>();
+        private int conteo_FL = 1;
         Nodo nodo = null;
         Nodo Temp = null;
         Nodo TokenOp = null;
-        List<string> ValorsNT = new List<string>();
+        public List<string> ValorsNT = new List<string>();
         Dictionary<string, List<string>> NT = new Dictionary<string, List<string>>();                
         Stack<Nodo> S = new Stack<Nodo>();       
         Stack<string> T = new Stack<string>();
@@ -30,8 +31,10 @@ namespace Proyecto_Lenguajes
                     ValorsNT.Add(item[i]);
                 }
             }
-          
-            
+            ValorsNT.Add("<>");
+            ValorsNT.Add(">=");
+            ValorsNT.Add("<=");
+
             NT = dato;
         }
        
@@ -81,7 +84,6 @@ namespace Proyecto_Lenguajes
                             {
                                 throw new Exception("Faltan operandos");
                             }
-
                             else
                             {
                                 Temp.Der = S.Pop();
@@ -135,7 +137,6 @@ namespace Proyecto_Lenguajes
                     {
                         TokenOp = new Nodo(Evaluar);
                         TokenOp.Padre = null;
-
                         if (S.Count < 0)
                         {
                             throw new Exception("faltan operadandos");
@@ -175,18 +176,75 @@ namespace Proyecto_Lenguajes
             } 
                
            Arbol_e = S.Pop();
-            RecorridoInorden(Arbol_e);            
+            Recorridoposorden(Arbol_e);            
         }
 
         #endregion
-        public void RecorridoInorden(Nodo raiz)
+        public void Recorridoposorden(Nodo raiz)
         {
 
             if (raiz != null)
             {
-                RecorridoInorden(raiz.Izq);
+                Recorridoposorden(raiz.Izq);
+                Recorridoposorden(raiz.Der);
                 ContenidoArbol.Add(raiz);
-                RecorridoInorden(raiz.Der);
+                if (NT.ContainsKey(raiz.Dato) || ValorsNT.Contains(raiz.Dato))
+                {
+                    if (raiz.Dato == "*")
+                    {
+                        raiz.First = raiz.Izq.First;
+                        raiz.Last = raiz.Izq.Last;
+                        raiz.Nulable = true;
+                    }
+                    else if (raiz.Dato == ".")
+                    {
+                        if (raiz.Izq.Nulable == true)
+                        {
+                            foreach (var item in raiz.Izq.First)
+                            {
+                                raiz.First.Add(item);
+                            }
+                            foreach (var item in raiz.Der.First)
+                            {
+                                raiz.First.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            raiz.First = raiz.Izq.First;
+                        }
+                        if (raiz.Der.Nulable == true)
+                        {
+                            foreach (var item in raiz.Izq.Last)
+                            {
+                                raiz.Last.Add(item);
+                            }
+                            foreach (var item in raiz.Der.Last)
+                            {
+                                raiz.Last.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            raiz.Last = raiz.Der.Last;
+                        }
+                    }
+                    else
+                    {
+                    raiz.First.Add(conteo_FL);
+                    raiz.Last.Add(conteo_FL);
+                    conteo_FL++;
+                    }
+                }
+                if (raiz.Dato == ".")
+                {
+                    raiz.First = raiz.Der.First;
+                }
+                if (raiz.Dato == "*")
+                {
+                    raiz.First = raiz.Izq.First;
+                    raiz.Last = raiz.Izq.Last;
+                }
 
             }
 
