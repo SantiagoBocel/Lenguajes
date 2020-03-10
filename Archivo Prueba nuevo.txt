@@ -4,7 +4,7 @@ SETS
 	CHARSET = CHR(32)..CHR(254) 
 TOKENS
 	TOKEN 1= DIGITO  DIGITO *	                      
-	 
+	 TOKEN  4  = '='
 ACTIONS
 	RESERVADAS() 
 	{
