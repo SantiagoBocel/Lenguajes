@@ -34,13 +34,14 @@ namespace Proyecto_Lenguajes
             ValorsNT.Add("<>");
             ValorsNT.Add(">=");
             ValorsNT.Add("<=");
-
+           
             NT = dato;
         }
        
         #region Metodos_del_arbol
         public void insertar(Queue<string> Expresion_token)
         {
+            
             Operadores.Add(".");
             Operadores.Add("*");
             Operadores.Add("?");
@@ -196,6 +197,25 @@ namespace Proyecto_Lenguajes
                         raiz.Last = raiz.Izq.Last;
                         raiz.Nulable = true;
                     }
+                    else if (raiz.Dato == "|")
+                    {
+                        foreach (var item in raiz.Izq.First)
+                        {
+                            raiz.First.Add(item);
+                        }
+                        foreach (var item in raiz.Der.First)
+                        {
+                            raiz.First.Add(item);
+                        }
+                        foreach (var item in raiz.Izq.Last)
+                        {
+                            raiz.Last.Add(item);
+                        }
+                        foreach (var item in raiz.Der.Last)
+                        {
+                            raiz.Last.Add(item);
+                        }
+                    }
                     else if (raiz.Dato == ".")
                     {
                         if (raiz.Izq.Nulable == true)
@@ -236,17 +256,11 @@ namespace Proyecto_Lenguajes
                     conteo_FL++;
                     }
                 }
-                if (raiz.Dato == ".")
+                else
                 {
-                    raiz.First = raiz.Der.First;
+                    // Todos los operadores que no se encuentre en el diccionario
                 }
-                if (raiz.Dato == "*")
-                {
-                    raiz.First = raiz.Izq.First;
-                    raiz.Last = raiz.Izq.Last;
-                }
-
-            }
+                            }
 
         }
         public bool VerificarPrecedencia(string TokenPrecedencia, string UltimoOperadorLista)

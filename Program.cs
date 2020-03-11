@@ -100,8 +100,7 @@ namespace Proyecto_Lenguajes
                                         Set_NT[Terminal[num]].Add(Convert.ToString( Ndato[0]));
                                         break;
                                     default:
-                                        Console.WriteLine("Error");
-                                        break;
+                                        throw new Exception("Error");                                                                        
                                 }
 
                             }                                                                                                                 
@@ -154,18 +153,21 @@ namespace Proyecto_Lenguajes
                                 {                                 
                                     pila_Token.Enqueue(dato);                                                                     
                                 }                                                               
-                            }
-                            pila_Token.Enqueue("|");
+                            }                            
                             linea = archivo.ReadLine();
-                                //if (linea == "ACTIONS")
-                                //{
-                                //    pila_Token.Enqueue(".#");
-                                //}
+                            if (linea == "ACTIONS")
+                            {                                
+                                pila_Token.Enqueue(".");
+                                pila_Token.Enqueue("#");
+                                pila_Token.Enqueue("|");
+                            }
+                            else
+                            {
+                                pila_Token.Enqueue("|");
+                            }
                         }
                         while (linea != "ACTIONS");                        
-                        arbol.insertar(pila_Token);
-                        
-                        
+                        arbol.insertar(pila_Token);                                               
                         #endregion
                         break;
                     case "actions":
