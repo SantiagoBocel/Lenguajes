@@ -8,7 +8,7 @@ namespace Proyecto_Lenguajes
 {
     class Automata
     {
-        //-... --       
+        //-... --             
         Dictionary<int, List<int>> Follow = new Dictionary<int, List<int>>();
         string LLaves_Tabla = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
         List<Nodo> Tabla_2 = new List<Nodo>();
@@ -65,6 +65,7 @@ namespace Proyecto_Lenguajes
             {
                 Segunda_Tabla.Add(item,new List<int>());
             }
+            // estado = new Estado(raiz[raiz.Count - 1].First, letra_siguiente[0]);
             foreach (var item in raiz[raiz.Count - 1].First)
             {
                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[0]).Value.Add(item);
@@ -74,12 +75,31 @@ namespace Proyecto_Lenguajes
             {
                 if (item.numero != 0)
                 {
+
                     if (Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num]).Value.Contains(item.numero))
                     {
                         foreach (var valores in Follow.FirstOrDefault(w => w.Key == item.numero).Value)
                         {
-                        Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
-                        }                      
+                          if (!Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Contains(valores))
+                          {
+                           Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
+                          }
+                            else
+                            {
+                                Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 2]).Value.Add(valores);
+                            }
+                        }
+                        var a = Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value;
+                        var b = Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num]).Value;
+                        if (a.SequenceEqual(b))
+                        {
+                            Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Clear();
+                            num--;
+                        }
+                        else
+                        {
+                        num++;
+                        }
                     }
                 }
             }
