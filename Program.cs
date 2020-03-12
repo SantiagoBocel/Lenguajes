@@ -111,25 +111,27 @@ namespace Proyecto_Lenguajes
                        break;
                     case "tokens":
                         #region Tokens 
+                        var comilla_S = ("''");
                         var Simbolos_P = ("\"|ç0");
-                        var Simbolo_S = ("'''");
+                        var Simbolo_S = ("'''");                        
                         var Simbolo_mas = ("'+'");
+                        var Simbolo_por = ("'*'");
                         linea = archivo.ReadLine().Replace("\t", "");                      
                         pila_Token.Enqueue("(");                        
                         do
                         {
                             //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();                                                                                
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_S}","'ç0'").Replace("'", "").Split(' ');                                                                                    
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');                                                                                   
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 
                                 string dato = Arreglo_expresiones[i];
                                 #region Token 2
+                               
                                 if (dato == "ç0")
                                 {
                                     pila_Token.Enqueue(".");
-                                    pila_Token.Enqueue("'");
-                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("'");                                    
                                 }
                                 if (dato == Simbolos_P)
                                 {
@@ -152,7 +154,15 @@ namespace Proyecto_Lenguajes
                                 }
                                 if( arbol.ValorsNT.Contains(dato))                                
                                 {                                 
-                                    pila_Token.Enqueue(dato);                                                                     
+                                    pila_Token.Enqueue(dato);
+                                    if (dato == "\"")
+                                    {
+                                        pila_Token.Dequeue();
+                                        pila_Token.Dequeue();
+                                        pila_Token.Enqueue("(");
+                                        pila_Token.Enqueue(dato);
+                                        pila_Token.Enqueue(".");
+                                    }                                   
                                 }                                                               
                             }                            
                             linea = archivo.ReadLine();
@@ -188,3 +198,4 @@ namespace Proyecto_Lenguajes
        
     }
 }
+//Tareas revisar los arboles separando por las concatenaciones mostrar errores y terminar segunda tabla de follow 

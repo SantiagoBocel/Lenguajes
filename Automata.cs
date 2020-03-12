@@ -8,11 +8,15 @@ namespace Proyecto_Lenguajes
 {
     class Automata
     {
-        //-... --
+        //-... --       
         Dictionary<int, List<int>> Follow = new Dictionary<int, List<int>>();
+        string LLaves_Tabla = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+        List<Nodo> Tabla_2 = new List<Nodo>();
+        Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
+     
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)
-        {            
+        {     
             for (int i = 1; i < datos; i++)
             {
                 Follow.Add(i, new List<int>());
@@ -49,6 +53,34 @@ namespace Proyecto_Lenguajes
                 foreach (var Lista in item.Value)
                 {
                     Console.WriteLine("Valores asociados:{0}", Lista);    
+                }
+            }
+        }
+        #endregion
+        #region Segunda Tabla
+        public void Calcular_Tabla(List<Nodo> raiz)
+        {
+            var letra_siguiente = LLaves_Tabla.Split(',');
+            foreach (var item in letra_siguiente)
+            {
+                Segunda_Tabla.Add(item,new List<int>());
+            }
+            foreach (var item in raiz[raiz.Count - 1].First)
+            {
+                Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[0]).Value.Add(item);
+            }
+            int num = 0;
+            foreach (var item in raiz)
+            {
+                if (item.numero != 0)
+                {
+                    if (Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num]).Value.Contains(item.numero))
+                    {
+                        foreach (var valores in Follow.FirstOrDefault(w => w.Key == item.numero).Value)
+                        {
+                        Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
+                        }                      
+                    }
                 }
             }
         }
