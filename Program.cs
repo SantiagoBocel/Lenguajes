@@ -112,13 +112,14 @@ namespace Proyecto_Lenguajes
                     case "tokens":
                         #region Tokens 
                         var Simbolos_P = ("\"|ç0");
-                        var Simbolo_S = ("'''");                      
+                        var Simbolo_S = ("'''");
+                        var Simbolo_mas = ("'+'");
                         linea = archivo.ReadLine().Replace("\t", "");                      
                         pila_Token.Enqueue("(");                        
                         do
                         {
                             //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();                                                                                
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_S}","'ç0'").Replace("'", "").Split(' ');                                                                                    
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_S}","'ç0'").Replace("'", "").Split(' ');                                                                                    
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 
@@ -175,8 +176,12 @@ namespace Proyecto_Lenguajes
 
                         #endregion
                         break;
-                    default:
+                    case "error":
+                        #region Error
+                        #endregion
                         break;
+                    default:
+                     throw new Exception("Error en las instrucciones");
                 }                
             }    
         }

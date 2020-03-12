@@ -12,6 +12,7 @@ namespace Proyecto_Lenguajes
         //Terminar el arbol
         static public List<string> Operadores = new List<string>();
         private int conteo_FL = 1;
+        Automata auto = new Automata();
         Nodo nodo = null;
         Nodo Temp = null;
         Nodo TokenOp = null;
@@ -20,7 +21,7 @@ namespace Proyecto_Lenguajes
         Stack<Nodo> S = new Stack<Nodo>();       
         Stack<string> T = new Stack<string>();
         private Nodo Arbol_e;
-        List<Nodo> ContenidoArbol = new List<Nodo>();
+        Queue<Nodo> ContenidoArbol = new Queue<Nodo>();
         public void Insertar_Set(Dictionary<string, List<string>> dato)
         {
             var llave = dato.Keys;
@@ -34,10 +35,9 @@ namespace Proyecto_Lenguajes
             ValorsNT.Add("<>");
             ValorsNT.Add(">=");
             ValorsNT.Add("<=");
-           
+            ValorsNT.Add("+╚");
             NT = dato;
-        }
-       
+        }       
         #region Metodos_del_arbol
         public void insertar(Queue<string> Expresion_token)
         {
@@ -46,7 +46,7 @@ namespace Proyecto_Lenguajes
             Operadores.Add("*");
             Operadores.Add("?");
             Operadores.Add("+");
-            Operadores.Add("|");
+            Operadores.Add("|"); 
             while (Expresion_token.Count != 0)
             {
                 var Evaluar = Expresion_token.Dequeue();
@@ -177,18 +177,17 @@ namespace Proyecto_Lenguajes
             } 
                
            Arbol_e = S.Pop();
-            Recorridoposorden(Arbol_e);            
+            Recorridoposorden(Arbol_e);
+          auto.Calcular_Follow(ContenidoArbol,conteo_FL );
         }
-
         #endregion
         public void Recorridoposorden(Nodo raiz)
         {
-
             if (raiz != null)
             {
                 Recorridoposorden(raiz.Izq);
                 Recorridoposorden(raiz.Der);
-                ContenidoArbol.Add(raiz);
+                ContenidoArbol.Enqueue(raiz);                
                 if (NT.ContainsKey(raiz.Dato) || ValorsNT.Contains(raiz.Dato))
                 {
                     if (raiz.Dato == "*")
@@ -260,7 +259,7 @@ namespace Proyecto_Lenguajes
                 {
                     // Todos los operadores que no se encuentre en el diccionario
                 }
-                            }
+            }
 
         }
         public bool VerificarPrecedencia(string TokenPrecedencia, string UltimoOperadorLista)
