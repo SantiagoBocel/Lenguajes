@@ -10,55 +10,265 @@ namespace Proyecto_Lenguajes
     class Arbol
     {
         //Terminar el arbol
-        Nodo nodo = new Nodo();
-        Queue<string> pila_Token = new Queue<Arbol><string>();
-        Dictionary<string, List<char>> NT = new Dictionary<string, List<char>>();
-        public string ExpresionesRegulares = string.Empty;
-        // declaracion del primer nodo
-        public Nodo raiz;
-        public Arbol()
-        {
-            raiz = null;
-        }      
-        public void Insertar_Set(Dictionary<string,List<char>> dato)
+        static public List<string> Operadores = new List<string>();
+        private int conteo_FL = 1;
+        Automata auto = new Automata();
+        Nodo nodo = null;
+        Nodo Temp = null;
+        Nodo TokenOp = null;
+        public List<string> ValorsNT = new List<string>();
+        Dictionary<string, List<string>> NT = new Dictionary<string, List<string>>();                
+        Stack<Nodo> S = new Stack<Nodo>();       
+        Stack<string> T = new Stack<string>();
+        private Nodo Arbol_e;
+        Queue<Nodo> ContenidoArbol = new Queue<Nodo>();
+        public void Insertar_Set(Dictionary<string, List<string>> dato)
         {
             var llave = dato.Keys;
-            var valor = dato.Values;
-            NT = dato;
-        }
-        public void ConvertirExprecionaTokens()
-        {
-            for (int i = 0; i < ExpresionesRegulares.Length; i++)
+            foreach (var item in dato.Values)
             {
-                if ((ExpresionesRegulares.Substring(i, 1) == @"\" && ExpresionesRegulares.Substring(i + 1, 1) == "+") || (ExpresionesRegulares.Substring(i, 1) == @"." && ExpresionesRegulares.Substring(i + 1, 1) == ".") ||
-                    (ExpresionesRegulares.Substring(i, 1) == @"\" && ExpresionesRegulares.Substring(i + 1, 1) == "(") || (ExpresionesRegulares.Substring(i, 1) == @"\" && ExpresionesRegulares.Substring(i + 1, 1) == ")"))
+                for (int i = 0; i < item.Count; i++)
                 {
-                    pila_Token.Enqueue(Cadena.Substring(i, 2));
-                    i = i + 1;
+                    ValorsNT.Add(item[i]);
+                }
+            }
+            ValorsNT.Add("<>");
+            ValorsNT.Add(">=");
+            ValorsNT.Add("<=");
+            ValorsNT.Add("+╚");
+            NT = dato;
+        }       
+        #region Metodos_del_arbol
+        public void insertar(Queue<string> Expresion_token)
+        {
+            
+            Operadores.Add(".");
+            Operadores.Add("*");
+            Operadores.Add("?");
+            Operadores.Add("+");
+            Operadores.Add("|"); 
+            while (Expresion_token.Count != 0)
+            {
+                var Evaluar = Expresion_token.Dequeue();
+                if (NT.ContainsKey(Evaluar))
+                {
+                    nodo = new Nodo(Evaluar);
+                    nodo.Padre = null;
+                    S.Push(nodo);
+                }
+                else if (ValorsNT.Contains(Evaluar))
+                {
+                    if (Evaluar == "(")
+                    {
+                        T.Push(Evaluar);
+                    }
+                    else if(Operadores.Contains(Evaluar))
+                        {
+                        if (Evaluar == "+" || Evaluar == "?" || Evaluar == "*")
+                        {
+                            TokenOp = new Nodo(Evaluar);
+                            TokenOp.Padre = null;
+
+                            if (S.Count < 0)
+                            {
+                                throw new Exception("faltan operadandos");
+                            }
+                            TokenOp.Izq = S.Pop();
+                            TokenOp.Izq.Padre = TokenOp.Dato;
+                            S.Push(TokenOp);
+                        }
+                        else if (T.Count != 0 && T.Peek() != "(" && (VerificarPrecedencia(Evaluar, T.Peek()) == true))
+                        {
+                            Nodo Temp = new Nodo(T.Pop());
+                            Temp.Padre = null;
+                            if (S.Count < 2)
+                            {
+                                throw new Exception("Faltan operandos");
+                            }
+                            else
+                            {
+                                Temp.Der = S.Pop();
+                                Temp.Der.Padre = Temp.Dato;
+                                Temp.Izq = S.Pop();
+                                Temp.Izq.Padre = Temp.Dato;
+                                S.Push(Temp);
+                            }
+                        }
+                        if (Evaluar == "." || Evaluar == "|")
+                        {
+                            T.Push(Evaluar);
+                        }                        
+                    }
+                    else if (Evaluar == ")")
+                    {
+                        while (T.Count > 0 && (T.Peek() != "("))
+                        {
+                            if (T.Count == 0)
+                            {
+                                Console.WriteLine("faltan operandos");
+                            }
+                            if (S.Count < 2)
+                            {
+                                Console.WriteLine("faltan operadandos");
+                            }
+                            Temp = new Nodo(T.Pop());
+                            Temp.Padre = null;
+                            Temp.Der = S.Pop();
+                            Temp.Der.Padre = Temp.Dato;
+                            Temp.Izq = S.Pop();
+                            Temp.Izq.Padre = Temp.Dato;
+                            S.Push(Temp);
+                        }
+                        T.Pop();
+                    }
+                    else
+                    {
+                        nodo = new Nodo(Evaluar);
+                        nodo.Padre = null;
+                        S.Push(nodo);
+                    }
+                }
+                else if (Evaluar == "(")
+                {
+                    T.Push(Evaluar);
+                }
+                else if (Operadores.Contains(Evaluar))
+                {
+                    if (Evaluar == "+" || Evaluar == "?" || Evaluar == "*")
+                    {
+                        TokenOp = new Nodo(Evaluar);
+                        TokenOp.Padre = null;
+                        if (S.Count < 0)
+                        {
+                            throw new Exception("faltan operadandos");
+                        }
+                        TokenOp.Izq = S.Pop();
+                        TokenOp.Izq.Padre = TokenOp.Dato;
+                        S.Push(TokenOp);
+                    }
+                    else if (T.Count != 0 && T.Peek() != "(" && (VerificarPrecedencia(Evaluar, T.Peek()) == true))
+                    {
+                        Nodo Temp = new Nodo(T.Pop());
+                        Temp.Padre = null;
+                        if (S.Count < 2)
+                        {
+                            throw new Exception("Faltan operandos");
+                        }
+
+                        else
+                        {
+                            Temp.Der = S.Pop();
+                            Temp.Der.Padre = Temp.Dato;
+                            Temp.Izq = S.Pop();
+                            Temp.Izq.Padre = Temp.Dato;
+                            S.Push(Temp);
+                        }
+                    }
+                    if (Evaluar == "." || Evaluar == "|")
+                    {
+                        T.Push(Evaluar);
+                    }
                 }
                 else
                 {
-                    pila_Token.Enqueue(Cadena.Substring(i, 1));
+                    Console.WriteLine("El Dato:{0} No existe en los Set",Evaluar);
+                }
+
+            } 
+               
+           Arbol_e = S.Pop();
+            Recorridoposorden(Arbol_e);
+          auto.Calcular_Follow(ContenidoArbol,conteo_FL );
+        }
+        #endregion
+        public void Recorridoposorden(Nodo raiz)
+        {
+            if (raiz != null)
+            {
+                Recorridoposorden(raiz.Izq);
+                Recorridoposorden(raiz.Der);
+                ContenidoArbol.Enqueue(raiz);                
+                if (NT.ContainsKey(raiz.Dato) || ValorsNT.Contains(raiz.Dato))
+                {
+                    if (raiz.Dato == "*")
+                    {
+                        raiz.First = raiz.Izq.First;
+                        raiz.Last = raiz.Izq.Last;
+                        raiz.Nulable = true;
+                    }
+                    else if (raiz.Dato == "|")
+                    {
+                        foreach (var item in raiz.Izq.First)
+                        {
+                            raiz.First.Add(item);
+                        }
+                        foreach (var item in raiz.Der.First)
+                        {
+                            raiz.First.Add(item);
+                        }
+                        foreach (var item in raiz.Izq.Last)
+                        {
+                            raiz.Last.Add(item);
+                        }
+                        foreach (var item in raiz.Der.Last)
+                        {
+                            raiz.Last.Add(item);
+                        }
+                    }
+                    else if (raiz.Dato == ".")
+                    {
+                        if (raiz.Izq.Nulable == true)
+                        {
+                            foreach (var item in raiz.Izq.First)
+                            {
+                                raiz.First.Add(item);
+                            }
+                            foreach (var item in raiz.Der.First)
+                            {
+                                raiz.First.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            raiz.First = raiz.Izq.First;
+                        }
+                        if (raiz.Der.Nulable == true)
+                        {
+                            foreach (var item in raiz.Izq.Last)
+                            {
+                                raiz.Last.Add(item);
+                            }
+                            foreach (var item in raiz.Der.Last)
+                            {
+                                raiz.Last.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            raiz.Last = raiz.Der.Last;
+                        }
+                    }
+                    else
+                    {
+                    raiz.First.Add(conteo_FL);
+                    raiz.Last.Add(conteo_FL);
+                    conteo_FL++;
+                    }
+                }
+                else
+                {
+                    // Todos los operadores que no se encuentre en el diccionario
                 }
             }
+
         }
-            public void Insertar_Token()
+        public bool VerificarPrecedencia(string TokenPrecedencia, string UltimoOperadorLista)
         {
-            //(_*ASCII_*0..9+_*=_*[ID|T]+[ID|T]*)
+            int IndexToken = Operadores.FindIndex(x => x.Equals(TokenPrecedencia));
 
+            int IndexUltimo = Operadores.FindIndex(x => x.Equals(TokenPrecedencia));
 
-
+            return IndexToken >= IndexUltimo;
         }
-        #region Metodos_del_arbol
-        public void insertar(string letra)
-        {
-            Nodo nuevo = new Nodo();
-            if (this.raiz == null)
-            {
-
-            }
-        }
-        
-        #endregion
     }
 }

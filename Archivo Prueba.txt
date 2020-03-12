@@ -1,7 +1,7 @@
 SETS 
-	LETRA  = 'A'..'Z'+'a'..'z'+'_'  
+	LETRA   = 'A'..'Z'+'a'..'z'+'_'  
 	DIGITO  = '0'..'9'  
-	CHARSET = CHR(32)..CHR(50) 
+	CHARSET = CHR(32)..CHR(254) 
 TOKENS
 	TOKEN 1= DIGITO  DIGITO *
 	TOKEN 2='"' CHARSET '"'|''' CHARSET '''                       

@@ -1,0 +1,17 @@
+SETS 
+	LETRA = 'A'..'Z'+'a'..'z'+'_'  
+	DIGITO  = '0'..'9'  
+	CHARSET = CHR(32)..CHR(254) 
+TOKENS	 
+        TOKEN 1= DIGITO  DIGITO *                 	             	                      	
+ACTIONS
+	RESERVADAS() 
+	{
+		18 = 'PROGRAM'
+		19 = 'INCLUDE'
+		20 = 'CONST'
+		21 = 'TYPE' 
+		22 = 'VAR' 
+	} 
+ 
+ERROR = 54 
