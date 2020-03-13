@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 
 namespace Proyecto_Lenguajes
@@ -38,11 +39,45 @@ namespace Proyecto_Lenguajes
             ValorsNT.Add("*╚");
             #endregion
             NT = dato;
-        }       
+            Rangos_Completos();
+        }
+        public void Rangos_Completos()
+        {
+            StreamWriter Rangos = new StreamWriter(@"c:\Temp\Rangos.txt");
+            Rangos.WriteLine("Rangos Completos");
+            foreach (KeyValuePair<string, List<string>> pair in NT)
+            {
+                Rangos.WriteLine("Conjunto:{0}",pair.Key);
+                for (int i = 0; i < pair.Value.Count; i++)
+                {
+                    Rangos.WriteLine("Valores{0}",pair.Value[i]);
+                }
+            }
+            Rangos.Close();
+        }
+        public void First_Last()
+        {
+            StreamWriter First_Last = new StreamWriter(@"c:\Temp\First_Last.txt");
+            First_Last.WriteLine("First And Last");
+            foreach (var pair in contenido)
+            {
+                First_Last.WriteLine("Termino: {0}", pair.Dato);
+                for (int i = 0; i < pair.First.Count; i++)
+                {
+                    First_Last.WriteLine("First:{0}", pair.First[i]);
+                }
+                for (int i = 0; i < pair.Last.Count; i++)
+                {
+
+                 First_Last.WriteLine("Last:{0}",pair.Last[i]);                
+                }
+            }
+
+            First_Last.Close();
+        }
         #region Metodos_del_arbol
         public void insertar(Queue<string> Expresion_token)
-        {
-            
+        {           
             Operadores.Add(".");
             Operadores.Add("*");
             Operadores.Add("?");
@@ -87,7 +122,7 @@ namespace Proyecto_Lenguajes
                             {
                                 if (Evaluar == "." || Evaluar == "|")
                                 {
-                                    T.Push(Evaluar);                                   
+                                    T.Push(Evaluar);
                                 }
                             }
                             else
@@ -186,7 +221,8 @@ namespace Proyecto_Lenguajes
                 }
 
             }
-            ///////////////////////////////////           
+            ///////////////////////////////////  
+            
             Arbol_e = S.Pop();
             Recorridoposorden(Arbol_e);
           auto.Calcular_Follow(ContenidoArbol,conteo_FL );
@@ -200,6 +236,7 @@ namespace Proyecto_Lenguajes
                 Recorridoposorden(raiz.Izq);
                 Recorridoposorden(raiz.Der);
                 ContenidoArbol.Enqueue(raiz);
+                First_Last();
                 contenido.Add(raiz);
                 if (NT.ContainsKey(raiz.Dato) || ValorsNT.Contains(raiz.Dato))
                 {

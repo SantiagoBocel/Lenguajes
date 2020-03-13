@@ -163,14 +163,14 @@ namespace Proyecto_Lenguajes
                                 if( arbol.ValorsNT.Contains(dato))                                
                                 {                                 
                                     pila_Token.Enqueue(dato);
-                                    if (dato == "\"")
-                                    {
-                                        pila_Token.Dequeue();
-                                        pila_Token.Dequeue();
-                                        pila_Token.Enqueue("(");
-                                        pila_Token.Enqueue(dato);
-                                        pila_Token.Enqueue(".");
-                                    }                                   
+                                    //solo si es una vez
+                                    //if (dato == "\"")
+                                    //{
+                                    //    //pila_Token.Dequeue();
+                                    //    //pila_Token.Dequeue();
+                                    //    //pila_Token.Enqueue("(");
+                                    //    pila_Token.Enqueue(dato);
+                                    //}                                   
                                 }                                                               
                             }                            
                             linea = archivo.ReadLine();
@@ -185,7 +185,7 @@ namespace Proyecto_Lenguajes
                                 pila_Token.Enqueue("|");
                             }
                         }
-                        while (linea != "ACTIONS");                        
+                        while (linea != "ACTIONS"); 
                         arbol.insertar(pila_Token);                                               
                         #endregion
                         break;
@@ -215,6 +215,9 @@ namespace Proyecto_Lenguajes
                         #endregion
                         break;                   
                     default:
+                    case "":
+                        Console.ReadKey();
+                        break;
                      throw new Exception("Error en las instrucciones");
                 }                
             }    

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Proyecto_Lenguajes
 {
@@ -75,22 +76,28 @@ namespace Proyecto_Lenguajes
             int num = 0;
             foreach (var item in raiz)
             {
+                if (item.Dato == "#")
+                {
+                    break;
+                }
                 if (item.numero != 0)
                 {
-
+                    Regresar:
                     if (Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num]).Value.Contains(item.numero))
                     {
                         foreach (var valores in Follow.FirstOrDefault(w => w.Key == item.numero).Value)
                         {
                           if (!Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Contains(valores))
                           {
-
+                                //asociar tabla letra con caracter
                                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
                           }
                             else
                             {
-                                
+                                // asociar tabla letra con caracter
                                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 2]).Value.Add(valores);
+                                num++;
+                                goto Regresar;
                             }
                         }
                         var a = Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value;
@@ -105,6 +112,11 @@ namespace Proyecto_Lenguajes
                         num++;
                         }
                     }
+                    //else
+                    //{
+                    //    num++;
+                    //    goto Regresar;
+                    //}
                 }
             }
             //int numero = 0;
@@ -124,14 +136,29 @@ namespace Proyecto_Lenguajes
             //       }
             //     }
             //  }
-                
+
             //}
             //for (int i = 0; i < letra_siguiente.Length; i++)
             //{
             //    estado = new Estado(Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[i]).Value, letra_siguiente[i]);
-               
+
             //}
+            Tabla_Automata();
         }
         #endregion
+            public void Tabla_Automata()
+            {
+                StreamWriter Tabla_Automata = new StreamWriter(@"c:\Temp\Tabla_Automata.txt");
+                Tabla_Automata.WriteLine("Segunda Tabla");
+            foreach (KeyValuePair<string, List<int>> pair in Segunda_Tabla)
+            {
+                Tabla_Automata.WriteLine("Conjunto: {0}",pair.Key);
+                for (int i = 0; i < pair.Value.Count; i++)
+                {
+                Tabla_Automata.WriteLine("Follow asociado:{0}",pair.Value[i]);
+                }
+            }
+            Tabla_Automata.Close();
+            }
     }
 }
