@@ -12,10 +12,6 @@ namespace Proyecto_Lenguajes
        public List<int> numeros { get; set; }
        public Estado siguiente_estado { get; set; }
        public Nodo camino { get; set; }
-       public Estado(List<int> datos,string valor)
-        {
-            numeros = datos;
-            letra = valor;
-        }
+      
     }
 }

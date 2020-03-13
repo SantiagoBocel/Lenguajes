@@ -8,11 +8,14 @@ namespace Proyecto_Lenguajes
 {
     class Automata
     {
-        //-... --             
+        //-... --  
+       // Estado estado = null;
         Dictionary<int, List<int>> Follow = new Dictionary<int, List<int>>();
         string LLaves_Tabla = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
         List<Nodo> Tabla_2 = new List<Nodo>();
         Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
+        Dictionary<string, List<string>> Estado_siguiente = new Dictionary<string, List<string>>();
+        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();
      
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)
@@ -64,11 +67,10 @@ namespace Proyecto_Lenguajes
             foreach (var item in letra_siguiente)
             {
                 Segunda_Tabla.Add(item,new List<int>());
-            }
-            // estado = new Estado(raiz[raiz.Count - 1].First, letra_siguiente[0]);
+            }            
             foreach (var item in raiz[raiz.Count - 1].First)
             {
-                Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[0]).Value.Add(item);
+                Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[0]).Value.Add(item);              
             }
             int num = 0;
             foreach (var item in raiz)
@@ -82,10 +84,12 @@ namespace Proyecto_Lenguajes
                         {
                           if (!Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Contains(valores))
                           {
-                           Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
+
+                                Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
                           }
                             else
                             {
+                                
                                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 2]).Value.Add(valores);
                             }
                         }
@@ -103,6 +107,30 @@ namespace Proyecto_Lenguajes
                     }
                 }
             }
+            //int numero = 0;
+            //foreach (var item in raiz)
+            //{                
+            //  while (Follow.ContainsKey(item.numero))
+            //   {
+            //     foreach (KeyValuePair<string,List<int>> pair in Segunda_Tabla)
+            //     {
+            //       if (pair.Value.Contains(item.numero))
+            //       {
+            //        estado = new Estado();
+            //        estado.letra = letra_siguiente[numero];
+            //        estado.numeros = Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[numero]).Value;
+            //        estado.camino = item;
+            //        numero++;
+            //       }
+            //     }
+            //  }
+                
+            //}
+            //for (int i = 0; i < letra_siguiente.Length; i++)
+            //{
+            //    estado = new Estado(Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[i]).Value, letra_siguiente[i]);
+               
+            //}
         }
         #endregion
     }

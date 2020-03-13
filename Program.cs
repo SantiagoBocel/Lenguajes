@@ -8,11 +8,11 @@ using System.IO;
 namespace Proyecto_Lenguajes
 {
     class Program
-    {
-       
+    {      
         static void Main(string[] args)
         {
             List<string> Operadores = new List<string>();
+            Dictionary<int, string> Actions = new Dictionary<int, string>();
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
             Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
@@ -100,7 +100,7 @@ namespace Proyecto_Lenguajes
                                         Set_NT[Terminal[num]].Add(Convert.ToString( Ndato[0]));
                                         break;
                                     default:
-                                        throw new Exception("Error");                                                                        
+                                        throw new Exception(" Linea vacía Error");                                                                        
                                 }
 
                             }                                                                                                                 
@@ -116,12 +116,20 @@ namespace Proyecto_Lenguajes
                         var Simbolo_S = ("'''");                        
                         var Simbolo_mas = ("'+'");
                         var Simbolo_por = ("'*'");
-                        linea = archivo.ReadLine().Replace("\t", "");                      
+                        linea = archivo.ReadLine().Replace("\t", "");                        
                         pila_Token.Enqueue("(");                        
                         do
-                        {
-                            //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();                                                                                
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');                                                                                   
+                        {                           
+                            var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().ToLower();                            
+                            if (token.Length < 5 ||token.Substring(0,5) != "token")
+                            {
+                                throw new Exception("Error en las instrucciones");
+                            }
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            if (Arreglo_expresiones.Length == 0)
+                            {
+                                throw new Exception("Error en las instrucciones lista vacia");
+                            }
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 
@@ -182,20 +190,34 @@ namespace Proyecto_Lenguajes
                         #endregion
                         break;
                     case "actions":
+                        var ultima = "";
                         #region Actions
-
+                        do
+                        {
+                            linea = archivo.ReadLine().Replace("\t", ""); 
+                            var Id_Action = linea.Substring(0, linea.IndexOf('('));
+                            linea = archivo.ReadLine();
+                            linea = archivo.ReadLine().Replace("\t\t", "");
+                            while (!linea.Contains("}"))
+                            {
+                              var num_Action = linea.Substring(0, linea.IndexOf('='));
+                              var Instruccion_Action = linea.Remove(0, linea.IndexOf('=') + 1).Trim();
+                                Actions.Add(Convert.ToInt32(num_Action),Instruccion_Action);
+                                linea = archivo.ReadLine();
+                            }
+                            linea = archivo.ReadLine();
+                            linea = archivo.ReadLine();
+                            ultima = linea.Substring(0, 5).ToLower();                            
+                        } while ($"{ultima}" != "error");
                         #endregion
-                        break;
-                    case "error":
                         #region Error
+                        var num_Error = linea.Substring(0, linea.IndexOf('=') + 1).Trim();
                         #endregion
-                        break;
+                        break;                   
                     default:
                      throw new Exception("Error en las instrucciones");
                 }                
             }    
-        }
-       
+        }      
     }
-}
-//Tareas revisar los arboles separando por las concatenaciones mostrar errores y terminar segunda tabla de follow 
+} 
