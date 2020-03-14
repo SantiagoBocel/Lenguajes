@@ -15,9 +15,8 @@ namespace Proyecto_Lenguajes
         string LLaves_Tabla = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
         List<Nodo> Tabla_2 = new List<Nodo>();
         Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
-        Dictionary<string, List<string>> Estado_siguiente = new Dictionary<string, List<string>>();
-        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();
-     
+        //Dictionary<string, List<string>> Estado_siguiente = new Dictionary<string, List<string>>();
+        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();       
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)
         {     
@@ -68,12 +67,14 @@ namespace Proyecto_Lenguajes
             foreach (var item in letra_siguiente)
             {
                 Segunda_Tabla.Add(item,new List<int>());
+                camino.Add(item, new List<string>());
             }            
             foreach (var item in raiz[raiz.Count - 1].First)
             {
                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[0]).Value.Add(item);              
             }
             int num = 0;
+
             foreach (var item in raiz)
             {
                 if (item.Dato == "#")
@@ -90,11 +91,16 @@ namespace Proyecto_Lenguajes
                           if (!Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Contains(valores))
                           {
                                 //asociar tabla letra con caracter
+                                //Camino.Add(letra_siguiente[num], item.Dato);
+                                
+                                camino.FirstOrDefault(x => x.Key == letra_siguiente[num]).Value.Add(item.Dato);
                                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 1]).Value.Add(valores);
                           }
                             else
                             {
                                 // asociar tabla letra con caracter
+                                camino.FirstOrDefault(x => x.Key == letra_siguiente[num]).Value.Add(item.Dato);
+                                //Camino.Add(letra_siguiente[num], item.Dato);
                                 Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[num + 2]).Value.Add(valores);
                                 num++;
                                 goto Regresar;
@@ -156,6 +162,15 @@ namespace Proyecto_Lenguajes
                 for (int i = 0; i < pair.Value.Count; i++)
                 {
                 Tabla_Automata.WriteLine("Follow asociado:{0}",pair.Value[i]);
+                }
+            }
+            Tabla_Automata.WriteLine("Camino de Automata");
+            foreach (KeyValuePair<string, List<string>> camino_Conjunto in camino)
+            {
+               Tabla_Automata.WriteLine("Conjunto: {0}",camino_Conjunto.Key);
+                for (int i = 0; i < camino_Conjunto.Value.Count; i++)
+                {
+                    Tabla_Automata.WriteLine("Caminos Terminales: {0}",camino_Conjunto.Value[i]);
                 }
             }
             Tabla_Automata.Close();

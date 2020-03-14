@@ -116,6 +116,9 @@ namespace Proyecto_Lenguajes
                         var Simbolo_S = ("'''");                        
                         var Simbolo_mas = ("'+'");
                         var Simbolo_por = ("'*'");
+                        var Simbolo_Or = ("'|'");
+                        var Simbolo_Inte = ("'?'");
+                        var Simbolo_punt = ("'.'");
                         linea = archivo.ReadLine().Replace("\t", "");                        
                         pila_Token.Enqueue("(");                        
                         do
@@ -125,17 +128,24 @@ namespace Proyecto_Lenguajes
                             {
                                 throw new Exception("Error en las instrucciones");
                             }
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
                             if (Arreglo_expresiones.Length == 0)
                             {
                                 throw new Exception("Error en las instrucciones lista vacia");
                             }
+                            //if (Arreglo_expresiones.Contains(")*"))
+                            //{
+                            //    Arreglo_expresiones[3] = Arreglo_expresiones[3] + "*";
+                            //}
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 
                                 string dato = Arreglo_expresiones[i];
                                 #region Token 2
-                               
+                                if (dato == ")*")
+                                {
+                                    //no hacer nada
+                                }
                                 if (dato == "ç0")
                                 {
                                     pila_Token.Enqueue(".");

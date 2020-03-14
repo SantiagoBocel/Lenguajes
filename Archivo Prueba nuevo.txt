@@ -17,7 +17,7 @@ TOKENS
 	TOKEN  13  = '*' 
 	TOKEN  14  = 'A''N''D'
 	TOKEN    15  = 'M''O''D'
-	TOKEN  16  = 'D''I''V'   	             	                      	
+	TOKEN  16  = 'D''I''V'                	             	                      	
 ACTIONS
 	RESERVADAS() 
 	{

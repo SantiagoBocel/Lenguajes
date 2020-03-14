@@ -222,7 +222,10 @@ namespace Proyecto_Lenguajes
 
             }
             ///////////////////////////////////  
-            
+            if (S.Count > 1)
+            {
+                throw new Exception("arbol Fuera de Rango");
+            }
             Arbol_e = S.Pop();
             Recorridoposorden(Arbol_e);
           auto.Calcular_Follow(ContenidoArbol,conteo_FL );
