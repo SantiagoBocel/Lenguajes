@@ -8,11 +8,11 @@ using System.IO;
 namespace Proyecto_Lenguajes
 {
     class Program
-    {
-       
+    {      
         static void Main(string[] args)
         {
             List<string> Operadores = new List<string>();
+            Dictionary<int, string> Actions = new Dictionary<int, string>();
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
             Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
@@ -100,7 +100,7 @@ namespace Proyecto_Lenguajes
                                         Set_NT[Terminal[num]].Add(Convert.ToString( Ndato[0]));
                                         break;
                                     default:
-                                        throw new Exception("Error");                                                                        
+                                        throw new Exception(" Linea vacía Error");                                                                        
                                 }
 
                             }                                                                                                                 
@@ -111,25 +111,45 @@ namespace Proyecto_Lenguajes
                        break;
                     case "tokens":
                         #region Tokens 
+                        var comilla_S = ("''");
                         var Simbolos_P = ("\"|ç0");
-                        var Simbolo_S = ("'''");
+                        var Simbolo_S = ("'''");                        
                         var Simbolo_mas = ("'+'");
-                        linea = archivo.ReadLine().Replace("\t", "");                      
+                        var Simbolo_por = ("'*'");
+                        var Simbolo_Or = ("'|'");
+                        var Simbolo_Inte = ("'?'");
+                        var Simbolo_punt = ("'.'");
+                        linea = archivo.ReadLine().Replace("\t", "");                        
                         pila_Token.Enqueue("(");                        
                         do
-                        {
-                            //var Token_Id = linea.Substring(0, linea.IndexOf('=')).TrimStart();                                                                                
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace($"{Simbolo_S}","'ç0'").Replace("'", "").Split(' ');                                                                                    
+                        {                           
+                            var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().ToLower();                            
+                            if (token.Length < 5 ||token.Substring(0,5) != "token")
+                            {
+                                throw new Exception("Error en las instrucciones");
+                            }
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            if (Arreglo_expresiones.Length == 0)
+                            {
+                                throw new Exception("Error en las instrucciones lista vacia");
+                            }
+                            //if (Arreglo_expresiones.Contains(")*"))
+                            //{
+                            //    Arreglo_expresiones[3] = Arreglo_expresiones[3] + "*";
+                            //}
                             for (int i = 0; i < Arreglo_expresiones.Length; i++)
                             {
                                 
                                 string dato = Arreglo_expresiones[i];
                                 #region Token 2
+                                if (dato == ")*")
+                                {
+                                    //no hacer nada
+                                }
                                 if (dato == "ç0")
                                 {
                                     pila_Token.Enqueue(".");
-                                    pila_Token.Enqueue("'");
-                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("'");                                    
                                 }
                                 if (dato == Simbolos_P)
                                 {
@@ -152,7 +172,15 @@ namespace Proyecto_Lenguajes
                                 }
                                 if( arbol.ValorsNT.Contains(dato))                                
                                 {                                 
-                                    pila_Token.Enqueue(dato);                                                                     
+                                    pila_Token.Enqueue(dato);
+                                    //solo si es una vez
+                                    //if (dato == "\"")
+                                    //{
+                                    //    //pila_Token.Dequeue();
+                                    //    //pila_Token.Dequeue();
+                                    //    //pila_Token.Enqueue("(");
+                                    //    pila_Token.Enqueue(dato);
+                                    //}                                   
                                 }                                                               
                             }                            
                             linea = archivo.ReadLine();
@@ -167,24 +195,42 @@ namespace Proyecto_Lenguajes
                                 pila_Token.Enqueue("|");
                             }
                         }
-                        while (linea != "ACTIONS");                        
+                        while (linea != "ACTIONS"); 
                         arbol.insertar(pila_Token);                                               
                         #endregion
                         break;
                     case "actions":
+                        var ultima = "";
                         #region Actions
-
+                        do
+                        {
+                            linea = archivo.ReadLine().Replace("\t", ""); 
+                            var Id_Action = linea.Substring(0, linea.IndexOf('('));
+                            linea = archivo.ReadLine();
+                            linea = archivo.ReadLine().Replace("\t\t", "");
+                            while (!linea.Contains("}"))
+                            {
+                              var num_Action = linea.Substring(0, linea.IndexOf('='));
+                              var Instruccion_Action = linea.Remove(0, linea.IndexOf('=') + 1).Trim();
+                                Actions.Add(Convert.ToInt32(num_Action),Instruccion_Action);
+                                linea = archivo.ReadLine();
+                            }
+                            linea = archivo.ReadLine();
+                            linea = archivo.ReadLine();
+                            ultima = linea.Substring(0, 5).ToLower();                            
+                        } while ($"{ultima}" != "error");
                         #endregion
-                        break;
-                    case "error":
                         #region Error
+                        var num_Error = linea.Substring(0, linea.IndexOf('=') + 1).Trim();
                         #endregion
-                        break;
+                        break;                   
                     default:
+                    case "":
+                        Console.ReadKey();
+                        break;
                      throw new Exception("Error en las instrucciones");
                 }                
             }    
-        }
-       
+        }      
     }
-}
+} 
