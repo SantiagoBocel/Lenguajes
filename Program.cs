@@ -11,6 +11,7 @@ namespace Proyecto_Lenguajes
     {      
         static void Main(string[] args)
         {
+            // --... --
             List<string> Operadores = new List<string>();
             Dictionary<int, string> Actions = new Dictionary<int, string>();
             Arbol arbol = new Arbol();
@@ -18,6 +19,7 @@ namespace Proyecto_Lenguajes
             Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
             Queue<string> pila_Token = new Queue<string>();
             List<string> caracteres = new List<string>();
+            List<string> Validar_num = new List<string>();
             Console.WriteLine("Ingresar archivo");
             var path = Console.ReadLine();
             var archivo = new StreamReader(path);
@@ -27,6 +29,7 @@ namespace Proyecto_Lenguajes
             Operadores.Add("?");
             Operadores.Add("+");
             Operadores.Add("|");
+            
             while (linea != null)
             {
                 linea = linea.Trim().ToLower();
@@ -121,8 +124,13 @@ namespace Proyecto_Lenguajes
                         var Simbolo_punt = ("'.'");
                         linea = archivo.ReadLine().Replace("\t", "");                        
                         pila_Token.Enqueue("(");                        
+                        
                         do
-                        {                           
+                        {
+                            if (linea == " ")
+                            {
+                                break;
+                            }
                             var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().ToLower();                            
                             if (token.Length < 5 ||token.Substring(0,5) != "token")
                             {
@@ -181,7 +189,7 @@ namespace Proyecto_Lenguajes
                                     //    //pila_Token.Enqueue("(");
                                     //    pila_Token.Enqueue(dato);
                                     //}                                   
-                                }                                                               
+                                }                                
                             }                            
                             linea = archivo.ReadLine();
                             if (linea == "ACTIONS")

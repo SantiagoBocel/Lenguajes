@@ -10,7 +10,7 @@ namespace Proyecto_Lenguajes
 {
     class Arbol
     {
-        //Terminar el arbol
+        //-... --
         static public List<string> Operadores = new List<string>();
         public List<Nodo> contenido = new List<Nodo>();
         private int conteo_FL = 1;
@@ -37,7 +37,12 @@ namespace Proyecto_Lenguajes
             #region valores Extra            
             ValorsNT.Add("+╚");
             ValorsNT.Add("*╚");
+            ValorsNT.Add(".╚");
+            ValorsNT.Add("?╚");
+            ValorsNT.Add("|╚");
+            
             #endregion
+            
             NT = dato;
             Rangos_Completos();
         }
@@ -197,6 +202,28 @@ namespace Proyecto_Lenguajes
                     {
                         Nodo Temp = new Nodo(T.Pop());
                         Temp.Padre = null;
+                        //if (S.Count == 1)
+                        //{
+                        //    if (Evaluar == "." || Evaluar == "|")
+                        //    {
+                        //        T.Push(Evaluar);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    if (S.Count < 2)
+                        //    {
+                        //        throw new Exception("Faltan operandos");
+                        //    }
+                        //    else
+                        //    {
+                        //        Temp.Der = S.Pop();
+                        //        Temp.Der.Padre = Temp.Dato;
+                        //        Temp.Izq = S.Pop();
+                        //        Temp.Izq.Padre = Temp.Dato;
+                        //        S.Push(Temp);
+                        //    }
+                        //}
                         if (S.Count < 2)
                         {
                             throw new Exception("Faltan operandos");
@@ -227,17 +254,17 @@ namespace Proyecto_Lenguajes
                 throw new Exception("arbol Fuera de Rango");
             }
             Arbol_e = S.Pop();
-            Recorridoposorden(Arbol_e);
+            Recorrido(Arbol_e);
           auto.Calcular_Follow(ContenidoArbol,conteo_FL );
             auto.Calcular_Tabla(contenido);
         }
         #endregion
-        public void Recorridoposorden(Nodo raiz)
+        public void Recorrido(Nodo raiz)
         {
             if (raiz != null)
             {
-                Recorridoposorden(raiz.Izq);
-                Recorridoposorden(raiz.Der);
+                Recorrido(raiz.Izq);
+                Recorrido(raiz.Der);
                 ContenidoArbol.Enqueue(raiz);
                 First_Last();
                 contenido.Add(raiz);
@@ -313,7 +340,7 @@ namespace Proyecto_Lenguajes
                 {
                     // Todos los operadores que no se encuentre en el diccionario
                 }
-            }
+            }//end if
 
         }
         public bool VerificarPrecedencia(string TokenPrecedencia)
