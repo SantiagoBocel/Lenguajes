@@ -11,6 +11,7 @@ namespace Proyecto_Lenguajes
     class Arbol
     {
         //-... --
+        Fase_2 fase_2 = new Fase_2();
         static public List<string> Operadores = new List<string>();
         public List<Nodo> contenido = new List<Nodo>();
         private int conteo_FL = 1;
@@ -24,8 +25,9 @@ namespace Proyecto_Lenguajes
         Stack<string> T = new Stack<string>();
         private Nodo Arbol_e;
         Queue<Nodo> ContenidoArbol = new Queue<Nodo>();
-        public void Insertar_Set(Dictionary<string, List<string>> dato)
+        public Dictionary<string, List<string>> Insertar_Set(Dictionary<string, List<string>> dato)
         {
+            
             var llave = dato.Keys;
             foreach (var item in dato.Values)
             {
@@ -40,11 +42,11 @@ namespace Proyecto_Lenguajes
             ValorsNT.Add(".╚");
             ValorsNT.Add("?╚");
             ValorsNT.Add("|╚");
-            
+
             #endregion
-            
             NT = dato;
-            Rangos_Completos();
+            return(dato);            
+           // Rangos_Completos();
         }
         public void Rangos_Completos()
         {
@@ -256,6 +258,7 @@ namespace Proyecto_Lenguajes
             Recorrido(Arbol_e);
           auto.Calcular_Follow(ContenidoArbol,conteo_FL );
             auto.Calcular_Tabla(contenido);
+             
         }
         #endregion
         public void Recorrido(Nodo raiz)

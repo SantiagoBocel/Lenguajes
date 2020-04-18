@@ -12,8 +12,9 @@ namespace Proyecto_Lenguajes
         static void Main(string[] args)
         {
             // --... --
-            List<string> Operadores = new List<string>();
+            List<string> Operadores = new List<string>();         
             Dictionary<int, string> Actions = new Dictionary<int, string>();
+            Dictionary<string, List<string>> NT = new Dictionary<string, List<string>>();
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
             Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();
@@ -110,7 +111,7 @@ namespace Proyecto_Lenguajes
 
                             }                                                                                                                 
                             linea = archivo.ReadLine().Replace("\t", "").Replace(" ", "");
-                            arbol.Insertar_Set(Set_NT);
+                          NT =  arbol.Insertar_Set(Set_NT);
                         }
                             #endregion
                        break;
@@ -215,8 +216,9 @@ namespace Proyecto_Lenguajes
                            
                         }
                         while (linea != "ACTIONS");
-                        fase_2.Tokens = Token_numero;
-                        arbol.insertar(pila_Token);                                               
+                       // fase_2.Tokens = Token_numero;
+                        arbol.insertar(pila_Token);
+                       
                         #endregion
                         break;
                     case "actions":
@@ -237,11 +239,18 @@ namespace Proyecto_Lenguajes
                             }
                             linea = archivo.ReadLine();
                             linea = archivo.ReadLine();
-                            ultima = linea.Substring(0, 5).ToLower();                            
+                            ultima = linea.Substring(0, 5).ToLower();
+                            StreamWriter Action = new StreamWriter(@"c:\Temp\Meta_Action.txt");
+                            foreach (KeyValuePair<int, string> pair in Actions)
+                            {
+                                Action.WriteLine("{0},{1}", pair.Key, pair.Value);
+                            }
+                            Action.Close();
                         } while ($"{ultima}" != "error");
                         #endregion
                         #region Error
                         var num_Error = linea.Substring(0, linea.IndexOf('=') + 1).Trim();
+                        fase_2.Start(NT);
                         #endregion
                         break;                   
                     default:
@@ -249,8 +258,11 @@ namespace Proyecto_Lenguajes
                         Console.ReadKey();
                         break;
                      throw new Exception("Error en las instrucciones");
-                }                
+                }
             }          
-        }      
+               
+        }
+        
+     
     }
 } 

@@ -16,8 +16,7 @@ namespace Proyecto_Lenguajes
         List<Nodo> Tabla_2 = new List<Nodo>();
         Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
         //Dictionary<string, List<string>> Estado_siguiente = new Dictionary<string, List<string>>();
-        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();
-        Fase_2 fase_2 = new Fase_2();
+        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();         
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)
         {     
@@ -149,9 +148,8 @@ namespace Proyecto_Lenguajes
             //{
             //    estado = new Estado(Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[i]).Value, letra_siguiente[i]);
 
-            //}
+            //}     
             Cantidad_Estados();
-            fase_2.Start();
            // Tabla_Automata();
         }
         #endregion
@@ -169,7 +167,11 @@ namespace Proyecto_Lenguajes
                     break;
                 }
             }
-            fase_2.Valores(n);
+
+            
+            StreamWriter Estado = new StreamWriter(@"c:\Temp\Meta_E.txt");
+            Estado.WriteLine("{0}",n);
+            Estado.Close();
         }
             public void Tabla_Automata()
             {
