@@ -82,12 +82,12 @@ namespace Proyecto_Lenguajes
         }
         #region Metodos_del_arbol
         public void insertar(Queue<string> Expresion_token)
-        {           
+        {
             Operadores.Add(".");
             Operadores.Add("*");
             Operadores.Add("?");
             Operadores.Add("+");
-            Operadores.Add("|");            
+            Operadores.Add("|");
             while (Expresion_token.Count != 0)
             {
                 var Evaluar = Expresion_token.Dequeue();
@@ -103,8 +103,8 @@ namespace Proyecto_Lenguajes
                     {
                         T.Push(Evaluar);
                     }
-                    else if(Operadores.Contains(Evaluar))
-                        {
+                    else if (Operadores.Contains(Evaluar))
+                    {
                         if (Evaluar == "+" || Evaluar == "?" || Evaluar == "*")
                         {
                             TokenOp = new Nodo(Evaluar);
@@ -132,24 +132,24 @@ namespace Proyecto_Lenguajes
                             }
                             else
                             {
-                            if (S.Count < 2)
-                            {
-                                throw new Exception("Faltan operandos");
-                            }
-                            else
-                            {
-                                Temp.Der = S.Pop();
-                                Temp.Der.Padre = Temp.Dato;
-                                Temp.Izq = S.Pop();
-                                Temp.Izq.Padre = Temp.Dato;
-                                S.Push(Temp);
-                            }
+                                if (S.Count < 2)
+                                {
+                                    throw new Exception("Faltan operandos");
+                                }
+                                else
+                                {
+                                    Temp.Der = S.Pop();
+                                    Temp.Der.Padre = Temp.Dato;
+                                    Temp.Izq = S.Pop();
+                                    Temp.Izq.Padre = Temp.Dato;
+                                    S.Push(Temp);
+                                }
                             }
                         }
                         if (Evaluar == "." || Evaluar == "|")
                         {
                             T.Push(Evaluar);
-                        }                        
+                        }
                     }
                     else if (Evaluar == ")")
                     {
@@ -244,11 +244,10 @@ namespace Proyecto_Lenguajes
                 }
                 else
                 {
-                    Console.WriteLine("El Dato:{0} No existe en los Set",Evaluar);
+                    Console.WriteLine("El Dato:{0} No existe en los Set", Evaluar);
                 }
 
-            }
-            ///////////////////////////////////  
+            }                     
             if (S.Count > 1)
             {
                 throw new Exception("arbol Fuera de Rango");
@@ -266,7 +265,7 @@ namespace Proyecto_Lenguajes
                 Recorrido(raiz.Izq);
                 Recorrido(raiz.Der);
                 ContenidoArbol.Enqueue(raiz);
-                First_Last();
+               // First_Last();
                 contenido.Add(raiz);
                 if (NT.ContainsKey(raiz.Dato) || ValorsNT.Contains(raiz.Dato))
                 {

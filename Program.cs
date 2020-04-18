@@ -16,12 +16,14 @@ namespace Proyecto_Lenguajes
             Dictionary<int, string> Actions = new Dictionary<int, string>();
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
-            Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
+            Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();
+            Dictionary<int, string[]> Token_numero = new Dictionary<int, string[]>();
             Queue<string> pila_Token = new Queue<string>();
             List<string> caracteres = new List<string>();
             List<string> Validar_num = new List<string>();
-            Console.WriteLine("Ingresar archivo");
-            var path = Console.ReadLine();
+            Fase_2 fase_2 = new Fase_2();
+            // Console.WriteLine("Ingresar Archivo");
+            var path = "C:\\Users\\Usuario\\Downloads\\archivo 19.txt";
             var archivo = new StreamReader(path);
             var linea = archivo.ReadLine();
             Operadores.Add(".");
@@ -131,12 +133,14 @@ namespace Proyecto_Lenguajes
                             {
                                 break;
                             }
-                            var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().ToLower();                            
+                            var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().TrimEnd().ToLower();
+                            var num_token = Convert.ToInt32( token.Remove(0,token.Length -1 ));
                             if (token.Length < 5 ||token.Substring(0,5) != "token")
                             {
                                 throw new Exception("Error en las instrucciones");
                             }
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "0(").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            Token_numero.Add(num_token,Arreglo_expresiones);
                             if (Arreglo_expresiones.Length == 0)
                             {
                                 throw new Exception("Error en las instrucciones lista vacia");
@@ -150,9 +154,15 @@ namespace Proyecto_Lenguajes
                                 
                                 string dato = Arreglo_expresiones[i];
                                 #region Token 2
+                                if (dato == "0(")
+                                {
+                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("(");
+                                }
                                 if (dato == ")*")
                                 {
-                                    //no hacer nada
+                                    pila_Token.Enqueue(")");
+                                    pila_Token.Enqueue("*");
                                 }
                                 if (dato == "ç0")
                                 {
@@ -202,8 +212,10 @@ namespace Proyecto_Lenguajes
                             {
                                 pila_Token.Enqueue("|");
                             }
+                           
                         }
-                        while (linea != "ACTIONS"); 
+                        while (linea != "ACTIONS");
+                        fase_2.Tokens = Token_numero;
                         arbol.insertar(pila_Token);                                               
                         #endregion
                         break;
@@ -238,7 +250,7 @@ namespace Proyecto_Lenguajes
                         break;
                      throw new Exception("Error en las instrucciones");
                 }                
-            }    
+            }          
         }      
     }
 } 

@@ -16,7 +16,8 @@ namespace Proyecto_Lenguajes
         List<Nodo> Tabla_2 = new List<Nodo>();
         Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
         //Dictionary<string, List<string>> Estado_siguiente = new Dictionary<string, List<string>>();
-        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();       
+        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();
+        Fase_2 fase_2 = new Fase_2();
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)
         {     
@@ -48,16 +49,16 @@ namespace Proyecto_Lenguajes
               }
              arbol.Dequeue();
             }
-            //Escribir en disco la tabla
-            Console.WriteLine("Tabla de Follow");
-            foreach (var item in Follow)
-            {
-                Console.WriteLine("LLaves:{0}",item.Key);
-                foreach (var Lista in item.Value)
-                {
-                    Console.WriteLine("Valores asociados:{0}", Lista);    
-                }
-            }
+            //Escribir la tabla
+            //Console.WriteLine("Tabla de Follow");
+            //foreach (var item in Follow)
+            //{
+            //    Console.WriteLine("LLaves:{0}",item.Key);
+            //    foreach (var Lista in item.Value)
+            //    {
+            //        Console.WriteLine("Valores asociados:{0}", Lista);    
+            //    }
+            //}
         }
         #endregion
         #region Segunda Tabla
@@ -149,9 +150,27 @@ namespace Proyecto_Lenguajes
             //    estado = new Estado(Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[i]).Value, letra_siguiente[i]);
 
             //}
-            Tabla_Automata();
+            Cantidad_Estados();
+            fase_2.Start();
+           // Tabla_Automata();
         }
         #endregion
+          public void Cantidad_Estados()
+        {
+            var n = 0;
+            foreach (var item in Segunda_Tabla)
+            {
+                if (item.Value.Count != 0)
+                {
+                    n++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            fase_2.Valores(n);
+        }
             public void Tabla_Automata()
             {
                 StreamWriter Tabla_Automata = new StreamWriter(@"c:\Temp\Tabla_Automata.txt");
