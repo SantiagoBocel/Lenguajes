@@ -15,7 +15,6 @@ namespace Proyecto_Lenguajes
         string LLaves_Tabla = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
         List<Nodo> Tabla_2 = new List<Nodo>();
         Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
-        //Dictionary<string, List<string>> Estado_siguiente = new Dictionary<string, List<string>>();
         Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();         
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)

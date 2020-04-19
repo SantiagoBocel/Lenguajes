@@ -50,7 +50,7 @@ namespace Proyecto_Lenguajes
                             var Dato = Valores.Split('+');
                             foreach (var item in  Dato)
                             {
-                             var Ndato = item.Replace("'", "").Replace("..", "").Replace("...", "").ToCharArray();                             
+                             var Ndato = item.Replace("'", "").Replace("..", "").Replace("...", "").ToCharArray();
                                 switch (Ndato.Length)
                                 {
                                     case 14:
@@ -66,10 +66,10 @@ namespace Proyecto_Lenguajes
                                         {
                                             Set_NT[Terminal[num]].Add(dato);
                                         }
-                                        break;                                       
+                                        break;
                                     case 15:
-                                        var Primero = Convert.ToInt32( Ndato[4].ToString() + Ndato[5].ToString());
-                                        var Segundo = Convert.ToInt32( Ndato[11].ToString() + Ndato[12].ToString() + Ndato[13].ToString());
+                                        var Primero = Convert.ToInt32(Ndato[4].ToString() + Ndato[5].ToString());
+                                        var Segundo = Convert.ToInt32(Ndato[11].ToString() + Ndato[12].ToString() + Ndato[13].ToString());
                                         var n = Primero;
                                         while (n != Segundo)
                                         {
@@ -79,7 +79,7 @@ namespace Proyecto_Lenguajes
                                         foreach (var dato in caracteres)
                                         {
                                             Set_NT[Terminal[num]].Add(dato);
-                                        }
+                                        }                
                                         break;
                                     case 16:
                                         var Primero16 = Convert.ToInt32(Ndato[4].ToString() + Ndato[5].ToString() + Ndato[6].ToString());
@@ -141,11 +141,12 @@ namespace Proyecto_Lenguajes
                                 throw new Exception("Error en las instrucciones");
                             }
                             var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "0(").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
-                            Token_numero.Add(num_token,Arreglo_expresiones);
+                            Token_numero.Add(num_token,Arreglo_expresiones);                           
                             if (Arreglo_expresiones.Length == 0)
                             {
                                 throw new Exception("Error en las instrucciones lista vacia");
                             }
+                           
                             //if (Arreglo_expresiones.Contains(")*"))
                             //{
                             //    Arreglo_expresiones[3] = Arreglo_expresiones[3] + "*";
@@ -215,10 +216,8 @@ namespace Proyecto_Lenguajes
                             }
                            
                         }
-                        while (linea != "ACTIONS");
-                       // fase_2.Tokens = Token_numero;
-                        arbol.insertar(pila_Token);
-                       
+                        while (linea != "ACTIONS");                       
+                        arbol.insertar(pila_Token);                       
                         #endregion
                         break;
                     case "actions":
@@ -250,6 +249,29 @@ namespace Proyecto_Lenguajes
                         #endregion
                         #region Error
                         var num_Error = linea.Substring(0, linea.IndexOf('=') + 1).Trim();
+                        StreamWriter NUM_TOK = new StreamWriter(@"c:\Temp\Expresion.txt");
+                        
+                        foreach (KeyValuePair<int, string[]> pair in Token_numero)
+                        {
+                            string T = "";
+                            for (int i = 0; i < pair.Value.Length; i++)
+                            {
+                                if (pair.Value[i] == "")
+                                {
+                                    T = T + ".";
+                                }
+                                else if (pair.Value[i] == "0(")
+                                {
+                                    T = T + "(";
+                                }
+                                else
+                                {
+                                    T = T + pair.Value[i];
+                                }
+                            }
+                            NUM_TOK.WriteLine("{0} = {1}", pair.Key, T);
+                        }
+                        NUM_TOK.Close();
                         fase_2.Start(NT);
                         #endregion
                         break;                   

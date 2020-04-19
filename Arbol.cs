@@ -84,7 +84,7 @@ namespace Proyecto_Lenguajes
         }
         #region Metodos_del_arbol
         public void insertar(Queue<string> Expresion_token)
-        {
+        {           
             Operadores.Add(".");
             Operadores.Add("*");
             Operadores.Add("?");
