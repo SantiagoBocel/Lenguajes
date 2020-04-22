@@ -249,8 +249,10 @@ namespace Proyecto_Lenguajes
                         #endregion
                         #region Error
                         var num_Error = linea.Substring(0, linea.IndexOf('=') + 1).Trim();
-                        StreamWriter NUM_TOK = new StreamWriter(@"c:\Temp\Expresion.txt");
-                        
+                        StreamWriter Error_num = new StreamWriter(@"c:\Temp\NUMERROR.txt");
+                        Error_num.WriteLine("{0}",num_Error);
+                        Error_num.Close();
+                        StreamWriter NUM_TOK = new StreamWriter(@"c:\Temp\Expresion.txt");                        
                         foreach (KeyValuePair<int, string[]> pair in Token_numero)
                         {
                             string T = "";

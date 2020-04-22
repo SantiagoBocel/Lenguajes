@@ -17,6 +17,7 @@ namespace Proyecto_Lenguajes
             List<string> L = new List<string>();
             List<string> D = new List<string>();
             List<string> C = new List<string>();
+        int Error = 0;
        public void Empezar()
         {
             var path = "C:\\Temp\\Meta_E.txt";
@@ -26,6 +27,10 @@ namespace Proyecto_Lenguajes
       
         public void Start(Dictionary<string, List<string>> dato)
         {
+            var P = "c:\\Temp\\NUMERROR.txt";
+            var A = new StreamReader(P);
+            Error = Convert.ToInt32(A.ReadLine());
+
             var path = "C:\\Temp\\Meta_Action.txt";
             var archivo = new StreamReader(path);
             var linea = archivo.ReadLine();         
@@ -79,17 +84,31 @@ namespace Proyecto_Lenguajes
                 }
             }
             // 
+            vuelta:
             while (n!=cadena.Length)
             {
+                if (Convert.ToString(cadena[n]) == " ")
+                {
+                    n++;
+                    goto vuelta;
+                }
                 if (L.Contains(Convert.ToString(cadena[n])))
                 {                   
                  //Letras                        
-                Token_Letra(ref n, cadena);
-                    n++;
+                Token_Letra(ref n, cadena);                    
+                    goto vuelta;
                 }
                 if (D.Contains(Convert.ToString(cadena[n])))
                 {
-                    Token_Digito(ref n, cadena);                                    
+                    //Digito
+                    Token_Digito(ref n, cadena);
+                    goto vuelta;
+                }
+                if (C.Contains(Convert.ToString(cadena[n])))
+                {
+                    //charset
+                    Token_char(ref n,cadena);
+                    goto vuelta;
                 }
             }
                 
@@ -99,7 +118,7 @@ namespace Proyecto_Lenguajes
         public void Token_Letra(ref int n, char[] cadena)
         {
         Regreso:
-            if (n > cadena.Length )
+            if (n > cadena.Length - 1)
             {
                 Console.ReadKey();                    
             }
@@ -167,10 +186,17 @@ namespace Proyecto_Lenguajes
                         }
                         break;
                 case 'c':
+                        if (n >= cadena.Length - 1)
+                        {
+                            Letra_T(ref n, cadena);
+                        }
+                        else
+                        {
+
                         if (cadena[n + 4] == 't')
                         {
                             string Frase = "";
-                            for (int i = n; i != 5; i++)
+                            for (int i = n; i != n + 5; i++)
                             {
                                 Frase = Frase + Convert.ToString(cadena[i]);
                             }
@@ -180,7 +206,7 @@ namespace Proyecto_Lenguajes
                             {
                                 y++;
                             }
-                           prueba:
+                          prueba:
                             if (Actions[y] == Frase)
                             {
                                 Console.WriteLine("{0}={1}", Frase, y);
@@ -190,8 +216,13 @@ namespace Proyecto_Lenguajes
                                 y++;
                                 goto prueba;
                             }
-                            n = 5;
+                            n = n + 5;
                             goto Regreso;
+                        }
+                            else
+                            {
+                                Letra_T(ref n, cadena);
+                            }
                         }
                         break;
                 case 't':
@@ -251,38 +282,42 @@ namespace Proyecto_Lenguajes
                         }
                         break;
                 default:
-                        int x = 1;
-                        Reingreso:
-                        while (!Tokens.ContainsKey(x))
-                        {
-                            x++;
-                        }
-                        var T_O = Tokens[x].Replace("(",".").Split('.');
-                        int num = 0;
-                        Return:
-                        if (T_O[num].TrimStart() == "LETRA")
-                        {
-                            Console.WriteLine("{0}={1}", cadena[n], x);
-                            n++;
-                            goto Regreso;
-                        }
-                        else
-                        {
-                            if (num < T_O.Length - 1)
-                            {
-                              num++;
-                             goto Return;
-                            }
-                            else
-                            {
-                                x++;
-                                goto Reingreso;
-                            }
-                        }
-                    
+                        Letra_T(ref n, cadena);
+                        goto Regreso;
+                                        
               }
             }
                                     
+        }
+        public void Letra_T(ref int n, char[] cadena)
+        {
+            int x = 1;
+        Reingreso:
+            while (!Tokens.ContainsKey(x))
+            {
+                x++;
+            }
+            var T_O = Tokens[x].Replace("(", ".").Split('.');
+            int num = 0;
+        Return:
+            if (T_O[num].TrimStart() == "LETRA" || T_O[num].TrimStart() == Convert.ToString(cadena[n]))
+            {
+                Console.WriteLine("{0}={1}", cadena[n], x);
+                n++;               
+            }
+            else
+            {
+                if (num < T_O.Length - 1)
+                {
+                    num++;
+                    goto Return;
+                }
+                else
+                {
+                    x++;
+                    goto Reingreso;
+                }
+            }
         }
         public void Token_Digito(ref int n, char[] cadena)
         {
@@ -295,7 +330,7 @@ namespace Proyecto_Lenguajes
             var T_O = Tokens[x].Replace("(", ".").Split('.');
             int num = 0;
         Return:
-            if (T_O[num].TrimStart() == "DIGITO" )
+            if (T_O[num].TrimStart() == "DIGITO" || T_O[num].TrimStart() == Convert.ToString(cadena[n]))
             {
                 Console.WriteLine("{0}={1}", cadena[n], x);
                 n++;
@@ -314,9 +349,35 @@ namespace Proyecto_Lenguajes
                 }
             }
         }
-        public void Token_char()
+        public void Token_char(ref int n, char[] cadena)
         {
-
+            int x = 1;
+        Reingreso:
+            while (!Tokens.ContainsKey(x))
+            {
+                x++;
+            }
+            var T_O = Tokens[x].Replace("(", ".").Split('.');
+            int num = 0;
+        Return:
+            if (T_O[num].TrimStart() == "CHARSET" || T_O[num].TrimStart() == Convert.ToString(cadena[n]))
+            {
+                Console.WriteLine("{0}={1}", cadena[n], x);
+                n++;
+            }
+            else
+            {
+                if (num < T_O.Length - 1)
+                {
+                    num++;
+                    goto Return;
+                }
+                else
+                {
+                    x++;
+                    goto Reingreso;
+                }
+            }
         }
     }
 }
