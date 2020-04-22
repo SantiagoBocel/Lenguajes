@@ -46,6 +46,7 @@
     <Compile Include="Arbol.cs" />
     <Compile Include="Automata.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="Fase_2.cs" />
     <Compile Include="Nodo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

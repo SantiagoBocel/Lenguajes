@@ -12,16 +12,19 @@ namespace Proyecto_Lenguajes
         static void Main(string[] args)
         {
             // --... --
-            List<string> Operadores = new List<string>();
+            List<string> Operadores = new List<string>();         
             Dictionary<int, string> Actions = new Dictionary<int, string>();
+            Dictionary<string, List<string>> NT = new Dictionary<string, List<string>>();
             Arbol arbol = new Arbol();
             List<string> ListaLetras = new List<string>();
-            Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();                      
+            Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();
+            Dictionary<int, string[]> Token_numero = new Dictionary<int, string[]>();
             Queue<string> pila_Token = new Queue<string>();
             List<string> caracteres = new List<string>();
             List<string> Validar_num = new List<string>();
-            Console.WriteLine("Ingresar archivo");
-            var path = Console.ReadLine();
+            Fase_2 fase_2 = new Fase_2();
+            // Console.WriteLine("Ingresar Archivo");
+            var path = "C:\\Users\\Usuario\\Downloads\\archivo 19.txt";
             var archivo = new StreamReader(path);
             var linea = archivo.ReadLine();
             Operadores.Add(".");
@@ -47,7 +50,7 @@ namespace Proyecto_Lenguajes
                             var Dato = Valores.Split('+');
                             foreach (var item in  Dato)
                             {
-                             var Ndato = item.Replace("'", "").Replace("..", "").Replace("...", "").ToCharArray();                             
+                             var Ndato = item.Replace("'", "").Replace("..", "").Replace("...", "").ToCharArray();
                                 switch (Ndato.Length)
                                 {
                                     case 14:
@@ -63,10 +66,10 @@ namespace Proyecto_Lenguajes
                                         {
                                             Set_NT[Terminal[num]].Add(dato);
                                         }
-                                        break;                                       
+                                        break;
                                     case 15:
-                                        var Primero = Convert.ToInt32( Ndato[4].ToString() + Ndato[5].ToString());
-                                        var Segundo = Convert.ToInt32( Ndato[11].ToString() + Ndato[12].ToString() + Ndato[13].ToString());
+                                        var Primero = Convert.ToInt32(Ndato[4].ToString() + Ndato[5].ToString());
+                                        var Segundo = Convert.ToInt32(Ndato[11].ToString() + Ndato[12].ToString() + Ndato[13].ToString());
                                         var n = Primero;
                                         while (n != Segundo)
                                         {
@@ -76,7 +79,7 @@ namespace Proyecto_Lenguajes
                                         foreach (var dato in caracteres)
                                         {
                                             Set_NT[Terminal[num]].Add(dato);
-                                        }
+                                        }                
                                         break;
                                     case 16:
                                         var Primero16 = Convert.ToInt32(Ndato[4].ToString() + Ndato[5].ToString() + Ndato[6].ToString());
@@ -108,7 +111,7 @@ namespace Proyecto_Lenguajes
 
                             }                                                                                                                 
                             linea = archivo.ReadLine().Replace("\t", "").Replace(" ", "");
-                            arbol.Insertar_Set(Set_NT);
+                          NT =  arbol.Insertar_Set(Set_NT);
                         }
                             #endregion
                        break;
@@ -131,16 +134,19 @@ namespace Proyecto_Lenguajes
                             {
                                 break;
                             }
-                            var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().ToLower();                            
+                            var token = linea.Substring(0, linea.IndexOf('=')).TrimStart().TrimEnd().ToLower();
+                            var num_token = Convert.ToInt32( token.Remove(0,token.Length -1 ));
                             if (token.Length < 5 ||token.Substring(0,5) != "token")
                             {
                                 throw new Exception("Error en las instrucciones");
                             }
-                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            var Arreglo_expresiones = linea.Remove(0, linea.IndexOf('=') + 1).Trim().Replace($"{Simbolo_mas}","+╚").Replace("(", "0(").Replace($"{Simbolo_Or}", "|╚").Replace($"{Simbolo_por}", "*╚").Replace($"{Simbolo_punt}", ".╚").Replace($"{Simbolo_Inte}", "?╚").Replace($"{Simbolo_S}","'ç0'").Replace($"{comilla_S}","  ").Replace("'", "").Split(' ');
+                            Token_numero.Add(num_token,Arreglo_expresiones);                           
                             if (Arreglo_expresiones.Length == 0)
                             {
                                 throw new Exception("Error en las instrucciones lista vacia");
                             }
+                           
                             //if (Arreglo_expresiones.Contains(")*"))
                             //{
                             //    Arreglo_expresiones[3] = Arreglo_expresiones[3] + "*";
@@ -150,9 +156,15 @@ namespace Proyecto_Lenguajes
                                 
                                 string dato = Arreglo_expresiones[i];
                                 #region Token 2
+                                if (dato == "0(")
+                                {
+                                    pila_Token.Enqueue(".");
+                                    pila_Token.Enqueue("(");
+                                }
                                 if (dato == ")*")
                                 {
-                                    //no hacer nada
+                                    pila_Token.Enqueue(")");
+                                    pila_Token.Enqueue("*");
                                 }
                                 if (dato == "ç0")
                                 {
@@ -202,9 +214,10 @@ namespace Proyecto_Lenguajes
                             {
                                 pila_Token.Enqueue("|");
                             }
+                           
                         }
-                        while (linea != "ACTIONS"); 
-                        arbol.insertar(pila_Token);                                               
+                        while (linea != "ACTIONS");                       
+                        arbol.insertar(pila_Token);                       
                         #endregion
                         break;
                     case "actions":
@@ -225,11 +238,43 @@ namespace Proyecto_Lenguajes
                             }
                             linea = archivo.ReadLine();
                             linea = archivo.ReadLine();
-                            ultima = linea.Substring(0, 5).ToLower();                            
+                            ultima = linea.Substring(0, 5).ToLower();
+                            StreamWriter Action = new StreamWriter(@"c:\Temp\Meta_Action.txt");
+                            foreach (KeyValuePair<int, string> pair in Actions)
+                            {
+                                Action.WriteLine("{0},{1}", pair.Key, pair.Value);
+                            }
+                            Action.Close();
                         } while ($"{ultima}" != "error");
                         #endregion
                         #region Error
                         var num_Error = linea.Substring(0, linea.IndexOf('=') + 1).Trim();
+                        StreamWriter Error_num = new StreamWriter(@"c:\Temp\NUMERROR.txt");
+                        Error_num.WriteLine("{0}",num_Error);
+                        Error_num.Close();
+                        StreamWriter NUM_TOK = new StreamWriter(@"c:\Temp\Expresion.txt");                        
+                        foreach (KeyValuePair<int, string[]> pair in Token_numero)
+                        {
+                            string T = "";
+                            for (int i = 0; i < pair.Value.Length; i++)
+                            {
+                                if (pair.Value[i] == "")
+                                {
+                                    T = T + ".";
+                                }
+                                else if (pair.Value[i] == "0(")
+                                {
+                                    T = T + "(";
+                                }
+                                else
+                                {
+                                    T = T + pair.Value[i];
+                                }
+                            }
+                            NUM_TOK.WriteLine("{0} = {1}", pair.Key, T);
+                        }
+                        NUM_TOK.Close();
+                        fase_2.Start(NT);
                         #endregion
                         break;                   
                     default:
@@ -237,8 +282,11 @@ namespace Proyecto_Lenguajes
                         Console.ReadKey();
                         break;
                      throw new Exception("Error en las instrucciones");
-                }                
-            }    
-        }      
+                }
+            }          
+               
+        }
+        
+     
     }
 } 

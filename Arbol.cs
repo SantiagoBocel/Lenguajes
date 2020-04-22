@@ -11,6 +11,7 @@ namespace Proyecto_Lenguajes
     class Arbol
     {
         //-... --
+        Fase_2 fase_2 = new Fase_2();
         static public List<string> Operadores = new List<string>();
         public List<Nodo> contenido = new List<Nodo>();
         private int conteo_FL = 1;
@@ -24,8 +25,9 @@ namespace Proyecto_Lenguajes
         Stack<string> T = new Stack<string>();
         private Nodo Arbol_e;
         Queue<Nodo> ContenidoArbol = new Queue<Nodo>();
-        public void Insertar_Set(Dictionary<string, List<string>> dato)
+        public Dictionary<string, List<string>> Insertar_Set(Dictionary<string, List<string>> dato)
         {
+            
             var llave = dato.Keys;
             foreach (var item in dato.Values)
             {
@@ -40,11 +42,11 @@ namespace Proyecto_Lenguajes
             ValorsNT.Add(".╚");
             ValorsNT.Add("?╚");
             ValorsNT.Add("|╚");
-            
+
             #endregion
-            
             NT = dato;
-            Rangos_Completos();
+            return(dato);            
+           // Rangos_Completos();
         }
         public void Rangos_Completos()
         {
@@ -87,7 +89,7 @@ namespace Proyecto_Lenguajes
             Operadores.Add("*");
             Operadores.Add("?");
             Operadores.Add("+");
-            Operadores.Add("|");            
+            Operadores.Add("|");
             while (Expresion_token.Count != 0)
             {
                 var Evaluar = Expresion_token.Dequeue();
@@ -103,8 +105,8 @@ namespace Proyecto_Lenguajes
                     {
                         T.Push(Evaluar);
                     }
-                    else if(Operadores.Contains(Evaluar))
-                        {
+                    else if (Operadores.Contains(Evaluar))
+                    {
                         if (Evaluar == "+" || Evaluar == "?" || Evaluar == "*")
                         {
                             TokenOp = new Nodo(Evaluar);
@@ -132,24 +134,24 @@ namespace Proyecto_Lenguajes
                             }
                             else
                             {
-                            if (S.Count < 2)
-                            {
-                                throw new Exception("Faltan operandos");
-                            }
-                            else
-                            {
-                                Temp.Der = S.Pop();
-                                Temp.Der.Padre = Temp.Dato;
-                                Temp.Izq = S.Pop();
-                                Temp.Izq.Padre = Temp.Dato;
-                                S.Push(Temp);
-                            }
+                                if (S.Count < 2)
+                                {
+                                    throw new Exception("Faltan operandos");
+                                }
+                                else
+                                {
+                                    Temp.Der = S.Pop();
+                                    Temp.Der.Padre = Temp.Dato;
+                                    Temp.Izq = S.Pop();
+                                    Temp.Izq.Padre = Temp.Dato;
+                                    S.Push(Temp);
+                                }
                             }
                         }
                         if (Evaluar == "." || Evaluar == "|")
                         {
                             T.Push(Evaluar);
-                        }                        
+                        }
                     }
                     else if (Evaluar == ")")
                     {
@@ -244,11 +246,10 @@ namespace Proyecto_Lenguajes
                 }
                 else
                 {
-                    Console.WriteLine("El Dato:{0} No existe en los Set",Evaluar);
+                    Console.WriteLine("El Dato:{0} No existe en los Set", Evaluar);
                 }
 
-            }
-            ///////////////////////////////////  
+            }                     
             if (S.Count > 1)
             {
                 throw new Exception("arbol Fuera de Rango");
@@ -257,6 +258,7 @@ namespace Proyecto_Lenguajes
             Recorrido(Arbol_e);
           auto.Calcular_Follow(ContenidoArbol,conteo_FL );
             auto.Calcular_Tabla(contenido);
+             
         }
         #endregion
         public void Recorrido(Nodo raiz)
@@ -266,7 +268,7 @@ namespace Proyecto_Lenguajes
                 Recorrido(raiz.Izq);
                 Recorrido(raiz.Der);
                 ContenidoArbol.Enqueue(raiz);
-                First_Last();
+               // First_Last();
                 contenido.Add(raiz);
                 if (NT.ContainsKey(raiz.Dato) || ValorsNT.Contains(raiz.Dato))
                 {
