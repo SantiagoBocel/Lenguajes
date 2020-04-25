@@ -21,8 +21,8 @@ namespace Proyecto_Lenguajes
             Dictionary<int, string[]> Token_numero = new Dictionary<int, string[]>();
             Queue<string> pila_Token = new Queue<string>();
             List<string> caracteres = new List<string>();
-            List<string> Validar_num = new List<string>();
-            Fase_2 fase_2 = new Fase_2();
+            List<string> Validar_num = new List<string>();            
+            Codigo codigo = new Codigo();
             // Console.WriteLine("Ingresar Archivo");
             var path = "C:\\Users\\Usuario\\Downloads\\archivo 19.txt";
             var archivo = new StreamReader(path);
@@ -126,8 +126,7 @@ namespace Proyecto_Lenguajes
                         var Simbolo_Inte = ("'?'");
                         var Simbolo_punt = ("'.'");
                         linea = archivo.ReadLine().Replace("\t", "");                        
-                        pila_Token.Enqueue("(");                        
-                        
+                        pila_Token.Enqueue("(");                                                
                         do
                         {
                             if (linea == " ")
@@ -205,10 +204,11 @@ namespace Proyecto_Lenguajes
                             }                            
                             linea = archivo.ReadLine();
                             if (linea == "ACTIONS")
-                            {                                
+                            {
+                                pila_Token.Enqueue(")");
                                 pila_Token.Enqueue(".");
                                 pila_Token.Enqueue("#");
-                                pila_Token.Enqueue("|");
+                                
                             }
                             else
                             {
@@ -274,7 +274,7 @@ namespace Proyecto_Lenguajes
                             NUM_TOK.WriteLine("{0} = {1}", pair.Key, T);
                         }
                         NUM_TOK.Close();
-                        fase_2.Start(NT);
+                        codigo.P(NT);                                                
                         #endregion
                         break;                   
                     default:

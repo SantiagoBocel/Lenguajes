@@ -8,7 +8,8 @@ namespace Proyecto_Lenguajes
 {
     class Nodo
     {
-        public string Padre { get; set; }
+        // cambio
+        public Nodo Padre { get; set; }
         public string Dato { get; set; }
         public List<int> First = new List<int>();
         public List<int> Last = new List<int>();

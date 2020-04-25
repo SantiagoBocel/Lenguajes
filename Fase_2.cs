@@ -17,7 +17,7 @@ namespace Proyecto_Lenguajes
             List<string> L = new List<string>();
             List<string> D = new List<string>();
             List<string> C = new List<string>();
-        int Error = 0;
+        string Error = string.Empty;
        public void Empezar()
         {
             var path = "C:\\Temp\\Meta_E.txt";
@@ -29,7 +29,7 @@ namespace Proyecto_Lenguajes
         {
             var P = "c:\\Temp\\NUMERROR.txt";
             var A = new StreamReader(P);
-            Error = Convert.ToInt32(A.ReadLine());
+            Error = A.ReadLine();
 
             var path = "C:\\Temp\\Meta_Action.txt";
             var archivo = new StreamReader(path);
@@ -130,59 +130,73 @@ namespace Proyecto_Lenguajes
                         n++;
                         goto Regreso;                  
                 case 'p':
-                    if (cadena[n + 6] == 'm')
-                    {
-                        string Frase = "";
-                        for (int i = n; i != 7; i++)
+                        if (n >= cadena.Length - 1)
                         {
-                            Frase = Frase + Convert.ToString(cadena[i]);
+                            Letra_T(ref n, cadena);
                         }
-                        Frase = "'" + Frase + "'";
-                        int y = 1;
-                        while (!Actions.ContainsKey(y))
+                        else
                         {
-                            y++;
-                        }
-                        prueba:
-                        if (Actions[y] == Frase)
-                        {
-                            Console.WriteLine("{0}={1}",Frase,y);
-                        }
-                            else
+                            if (cadena[n + 6] == 'm')
                             {
-                                y++;
-                                goto prueba;
+                                string Frase = "";
+                                for (int i = n; i != 7; i++)
+                                {
+                                    Frase = Frase + Convert.ToString(cadena[i]);
+                                }
+                                Frase = "'" + Frase + "'";
+                                int y = 1;
+                                while (!Actions.ContainsKey(y))
+                                {
+                                    y++;
+                                }
+                            prueba:
+                                if (Actions[y] == Frase)
+                                {
+                                    Console.WriteLine("{0}={1}", Frase, y);
+                                }
+                                else
+                                {
+                                    y++;
+                                    goto prueba;
+                                }
+                                n = 7;
+                                goto Regreso;
                             }
-                        n = 7;
-                        goto Regreso;
-                    }
+                        }
                     break;
                 case 'i':
-                        if (cadena[n + 6] == 'e')
+                        if (n >= cadena.Length - 1)
                         {
-                            string Frase = "";
-                            for (int i = n; i != 7; i++)
+                            Letra_T(ref n, cadena);
+                        }
+                        else
+                        {
+                            if (cadena[n + 6] == 'e')
                             {
-                                Frase = Frase + Convert.ToString(cadena[i]);
+                                string Frase = "";
+                                for (int i = n; i != 7; i++)
+                                {
+                                    Frase = Frase + Convert.ToString(cadena[i]);
+                                }
+                                Frase = "'" + Frase + "'";
+                                int y = 1;
+                                while (!Actions.ContainsKey(y))
+                                {
+                                    y++;
+                                }
+                            prueba:
+                                if (Actions[y] == Frase)
+                                {
+                                    Console.WriteLine("{0}={1}", Frase, y);
+                                }
+                                else
+                                {
+                                    y++;
+                                    goto prueba;
+                                }
+                                n = 7;
+                                goto Regreso;
                             }
-                            Frase = "'" + Frase + "'";
-                            int y = 1;
-                            while (!Actions.ContainsKey(y))
-                            {
-                                y++;
-                            }
-                        prueba:
-                            if (Actions[y] == Frase)
-                            {
-                                Console.WriteLine("{0}={1}", Frase, y);
-                            }
-                            else
-                            {
-                                y++;
-                                goto prueba;
-                            }
-                            n = 7;
-                            goto Regreso;
                         }
                         break;
                 case 'c':
@@ -226,59 +240,73 @@ namespace Proyecto_Lenguajes
                         }
                         break;
                 case 't':
-                        if (cadena[n + 3] == 'e')
+                        if (n >= cadena.Length - 1)
                         {
-                            string Frase = "";
-                            for (int i = n; i != 4; i++)
+                            Letra_T(ref n, cadena);
+                        }
+                        else
+                        {
+                            if (cadena[n + 3] == 'e')
                             {
-                                Frase = Frase + Convert.ToString(cadena[i]);
-                            }
-                            Frase = "'" + Frase + "'";
-                            int y = 1;
-                            while (!Actions.ContainsKey(y))
-                            {
-                                y++;
-                            }
+                                string Frase = "";
+                                for (int i = n; i != 4; i++)
+                                {
+                                    Frase = Frase + Convert.ToString(cadena[i]);
+                                }
+                                Frase = "'" + Frase + "'";
+                                int y = 1;
+                                while (!Actions.ContainsKey(y))
+                                {
+                                    y++;
+                                }
                             prueba:
-                            if (Actions[y] == Frase)
-                            {
-                                Console.WriteLine("{0}={1}", Frase, y);
+                                if (Actions[y] == Frase)
+                                {
+                                    Console.WriteLine("{0}={1}", Frase, y);
+                                }
+                                else
+                                {
+                                    y++;
+                                    goto prueba;
+                                }
+                                n = 4;
+                                goto Regreso;
                             }
-                            else
-                            {
-                                y++;
-                                goto prueba;
-                            }
-                            n = 4;
-                            goto Regreso;
                         }
                         break;
                     case 'v':
-                        if (cadena[n + 2] == 'r')
+                        if (n >= cadena.Length - 1)
                         {
-                            string Frase = "";
-                            for (int i = n; i != 3; i++)
+                            Letra_T(ref n, cadena);
+                        }
+                        else
+                        {
+                            if (cadena[n + 2] == 'r')
                             {
-                                Frase = Frase + Convert.ToString(cadena[i]);
-                            }
-                            Frase = "'" + Frase + "'";
-                            int y = 1;
-                            while (!Actions.ContainsKey(y))
-                            {
-                                y++;
-                            }
+                                string Frase = "";
+                                for (int i = n; i != 3; i++)
+                                {
+                                    Frase = Frase + Convert.ToString(cadena[i]);
+                                }
+                                Frase = "'" + Frase + "'";
+                                int y = 1;
+                                while (!Actions.ContainsKey(y))
+                                {
+                                    y++;
+                                }
                             prueba:
-                            if (Actions[y] == Frase)
-                            {
-                                Console.WriteLine("{0}={1}", Frase, y);
+                                if (Actions[y] == Frase)
+                                {
+                                    Console.WriteLine("{0}={1}", Frase, y);
+                                }
+                                else
+                                {
+                                    y++;
+                                    goto prueba;
+                                }
+                                n = 3;
+                                goto Regreso;
                             }
-                            else
-                            {
-                                y++;
-                                goto prueba;
-                            }
-                            n = 3;
-                            goto Regreso;
                         }
                         break;
                 default:
@@ -300,6 +328,10 @@ namespace Proyecto_Lenguajes
             var T_O = Tokens[x].Replace("(", ".").Split('.');
             int num = 0;
         Return:
+            if (num > T_O.Length)
+            {
+                Console.WriteLine("Error {0}", Error);
+            }
             if (T_O[num].TrimStart() == "LETRA" || T_O[num].TrimStart() == Convert.ToString(cadena[n]))
             {
                 Console.WriteLine("{0}={1}", cadena[n], x);
@@ -330,6 +362,10 @@ namespace Proyecto_Lenguajes
             var T_O = Tokens[x].Replace("(", ".").Split('.');
             int num = 0;
         Return:
+            if (num > T_O.Length)
+            {
+                Console.WriteLine("Error {0}",Error);
+            }
             if (T_O[num].TrimStart() == "DIGITO" || T_O[num].TrimStart() == Convert.ToString(cadena[n]))
             {
                 Console.WriteLine("{0}={1}", cadena[n], x);
@@ -360,6 +396,10 @@ namespace Proyecto_Lenguajes
             var T_O = Tokens[x].Replace("(", ".").Split('.');
             int num = 0;
         Return:
+            if (num > T_O.Length)
+            {
+                Console.WriteLine("Error {0}", Error);
+            }
             if (T_O[num].TrimStart() == "CHARSET" || T_O[num].TrimStart() == Convert.ToString(cadena[n]))
             {
                 Console.WriteLine("{0}={1}", cadena[n], x);
