@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Arbol.cs" />
     <Compile Include="Automata.cs" />
+    <Compile Include="Codigo.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="Fase_2.cs" />
     <Compile Include="Nodo.cs" />

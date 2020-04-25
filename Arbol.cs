@@ -10,8 +10,7 @@ namespace Proyecto_Lenguajes
 {
     class Arbol
     {
-        //-... --
-        Fase_2 fase_2 = new Fase_2();
+        //-... --       
         static public List<string> Operadores = new List<string>();
         public List<Nodo> contenido = new List<Nodo>();
         private int conteo_FL = 1;
@@ -25,9 +24,10 @@ namespace Proyecto_Lenguajes
         Stack<string> T = new Stack<string>();
         private Nodo Arbol_e;
         Queue<Nodo> ContenidoArbol = new Queue<Nodo>();
+        readonly Dictionary<string, int> dicPrecedence = new Dictionary<string, int> {{ "(", 5 }, { ")", 5 }, { "+", 4 }, { "?", 4 }, { "*", 4 }, { "·", 3 }, { "^", 2 }, { "$", 2 },
+            { "|", 1 } };
         public Dictionary<string, List<string>> Insertar_Set(Dictionary<string, List<string>> dato)
-        {
-            
+        {            
             var llave = dato.Keys;
             foreach (var item in dato.Values)
             {
@@ -99,166 +99,97 @@ namespace Proyecto_Lenguajes
                     nodo.Padre = null;
                     S.Push(nodo);
                 }
-                else if (ValorsNT.Contains(Evaluar))
-                {
-                    if (Evaluar == "(")
-                    {
-                        T.Push(Evaluar);
-                    }
-                    else if (Operadores.Contains(Evaluar))
-                    {
-                        if (Evaluar == "+" || Evaluar == "?" || Evaluar == "*")
-                        {
-                            TokenOp = new Nodo(Evaluar);
-                            TokenOp.Padre = null;
-
-                            if (S.Count < 0)
-                            {
-                                throw new Exception("faltan operadandos");
-                            }
-                            TokenOp.Izq = S.Pop();
-                            TokenOp.Izq.Padre = TokenOp.Dato;
-                            S.Push(TokenOp);
-                        }
-                        else if (T.Count != 0 && T.Peek() != "(" && (VerificarPrecedencia(Evaluar) == true))
-                        {
-                            Nodo Temp = new Nodo(T.Pop());
-                            Temp.Padre = null;
-                            //Prueba
-                            if (S.Count == 1)
-                            {
-                                if (Evaluar == "." || Evaluar == "|")
-                                {
-                                    T.Push(Evaluar);
-                                }
-                            }
-                            else
-                            {
-                                if (S.Count < 2)
-                                {
-                                    throw new Exception("Faltan operandos");
-                                }
-                                else
-                                {
-                                    Temp.Der = S.Pop();
-                                    Temp.Der.Padre = Temp.Dato;
-                                    Temp.Izq = S.Pop();
-                                    Temp.Izq.Padre = Temp.Dato;
-                                    S.Push(Temp);
-                                }
-                            }
-                        }
-                        if (Evaluar == "." || Evaluar == "|")
-                        {
-                            T.Push(Evaluar);
-                        }
-                    }
-                    else if (Evaluar == ")")
-                    {
-                        while (T.Count > 0 && (T.Peek() != "("))
-                        {
-                            if (T.Count == 0)
-                            {
-                                Console.WriteLine("faltan operandos");
-                            }
-                            if (S.Count < 2)
-                            {
-                                Console.WriteLine("faltan operadandos");
-                            }
-                            Temp = new Nodo(T.Pop());
-                            Temp.Padre = null;
-                            Temp.Der = S.Pop();
-                            Temp.Der.Padre = Temp.Dato;
-                            Temp.Izq = S.Pop();
-                            Temp.Izq.Padre = Temp.Dato;
-                            S.Push(Temp);
-                        }
-                        T.Pop();
-                    }
-                    else
-                    {
-                        nodo = new Nodo(Evaluar);
-                        nodo.Padre = null;
-                        S.Push(nodo);
-                    }
-                }
                 else if (Evaluar == "(")
                 {
                     T.Push(Evaluar);
                 }
+                else if (Evaluar == ")")
+                {
+                    while (T.Count != 0 && T.Peek() != "(")
+                    {
+                        if (T.Count() == 0)
+                        {
+                            Console.WriteLine("Faltan operandos 1");
+                        }
+                        if (S.Count() < 2)
+                        {
+                            Console.WriteLine("Faltan operandos 2");
+                        }
+
+                        Temp = new Nodo(T.Pop());
+                        Temp.Der = S.Pop();
+                        Temp.Der.Padre = Temp;
+                        Temp.Izq = S.Pop();
+                        Temp.Izq.Padre = Temp;
+                        S.Push(Temp);
+                    }
+                    T.Pop();
+                }
                 else if (Operadores.Contains(Evaluar))
                 {
-                    if (Evaluar == "+" || Evaluar == "?" || Evaluar == "*")
+                    if (Evaluar == "*" || Evaluar == "+" || Evaluar == "?")
                     {
-                        TokenOp = new Nodo(Evaluar);
-                        TokenOp.Padre = null;
-                        if (S.Count < 0)
+                        Nodo opNode = new Nodo(Evaluar);
+                        if (S.Count() == 0)
                         {
-                            throw new Exception("faltan operadandos");
+                            Console.WriteLine("Faltan operandos 3");
+
                         }
-                        TokenOp.Izq = S.Pop();
-                        TokenOp.Izq.Padre = TokenOp.Dato;
-                        S.Push(TokenOp);
+                        opNode.Izq = S.Pop();
+                        opNode.Izq.Padre = opNode;
+                        S.Push(opNode);
                     }
-                    else if (T.Count != 0 && T.Peek() != "(" && (VerificarPrecedencia(Evaluar) == true))
+                    else if (T.Count() != 0)
                     {
-                        Nodo Temp = new Nodo(T.Pop());
-                        Temp.Padre = null;
-                        //if (S.Count == 1)
-                        //{
-                        //    if (Evaluar == "." || Evaluar == "|")
-                        //    {
-                        //        T.Push(Evaluar);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    if (S.Count < 2)
-                        //    {
-                        //        throw new Exception("Faltan operandos");
-                        //    }
-                        //    else
-                        //    {
-                        //        Temp.Der = S.Pop();
-                        //        Temp.Der.Padre = Temp.Dato;
-                        //        Temp.Izq = S.Pop();
-                        //        Temp.Izq.Padre = Temp.Dato;
-                        //        S.Push(Temp);
-                        //    }
-                        //}
-                        if (S.Count < 2)
+                        while (T.Count() != 0 && T.Peek() != "(" && HasMinorPrecedence(Evaluar))
                         {
-                            throw new Exception("Faltan operandos");
-                        }
-                        else
-                        {
-                            Temp.Der = S.Pop();
-                            Temp.Der.Padre = Temp.Dato;
-                            Temp.Izq = S.Pop();
-                            Temp.Izq.Padre = Temp.Dato;
-                            S.Push(Temp);
+                            if (S.Count() < 2)
+                            {
+                                Console.WriteLine("Faltan operandos 4");
+                            }
+                            Nodo temp = new Nodo(T.Pop());
+                            temp.Der = S.Pop();
+                            temp.Der.Padre = temp;
+                            temp.Izq = S.Pop();
+                            temp.Izq.Padre = temp;
+                            S.Push(temp);
                         }
                     }
-                    if (Evaluar == "." || Evaluar == "|")
+                    if (Evaluar != "*" && Evaluar != "?" && Evaluar != "+")
                     {
                         T.Push(Evaluar);
                     }
+                    else
+                    {
+                        Console.WriteLine( "Faltan operandos 5");                       
+                    }
                 }
-                else
+                while (T.Count() > 0)
                 {
-                    Console.WriteLine("El Dato:{0} No existe en los Set", Evaluar);
+                    if (T.Peek() == "(")
+                    {
+                        Console.WriteLine("Faltan operandos 6");                        
+                    }
+                    if (S.Count() < 2)
+                    {
+                        Console.WriteLine("Faltan operandos 7");
+                    }
+                    Nodo temp = new Nodo(T.Pop());
+                    temp.Der = S.Pop();
+                    temp.Der.Padre = temp;
+                    temp.Izq = S.Pop();
+                    temp.Izq.Padre = temp;
+                    S.Push(temp);
                 }
-
-            }                     
-            if (S.Count > 1)
-            {
-                throw new Exception("arbol Fuera de Rango");
+                if (S.Count() != 1)
+                {
+                    Console.WriteLine("Faltan operandos 8");                    
+                }                          
             }
-            Arbol_e = S.Pop();
-            Recorrido(Arbol_e);
-          auto.Calcular_Follow(ContenidoArbol,conteo_FL );
-            auto.Calcular_Tabla(contenido);
-             
+                Arbol_e = S.Pop();
+                Recorrido(Arbol_e);
+                auto.Calcular_Follow(ContenidoArbol, conteo_FL);
+                auto.Calcular_Tabla(contenido);
         }
         #endregion
         public void Recorrido(Nodo raiz)
@@ -344,6 +275,19 @@ namespace Proyecto_Lenguajes
                 }
             }//end if
 
+        }
+        public bool HasMinorPrecedence(string Token)
+        {
+            dicPrecedence.TryGetValue(Token, out int tokenValue);
+            dicPrecedence.TryGetValue(T.Peek(), out int opValue);
+            if (tokenValue <= opValue)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public bool VerificarPrecedencia(string TokenPrecedencia)
         {
