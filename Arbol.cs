@@ -15,16 +15,14 @@ namespace Proyecto_Lenguajes
         public List<Nodo> contenido = new List<Nodo>();
         private int conteo_FL = 1;
         Automata auto = new Automata();
-        Nodo nodo = null;
-        Nodo Temp = null;
-        Nodo TokenOp = null;
+        Nodo nodo = null;               
         public List<string> ValorsNT = new List<string>();
         Dictionary<string, List<string>> NT = new Dictionary<string, List<string>>();                
         Stack<Nodo> S = new Stack<Nodo>();       
         Stack<string> T = new Stack<string>();
         private Nodo Arbol_e;
         Queue<Nodo> ContenidoArbol = new Queue<Nodo>();
-        readonly Dictionary<string, int> dicPrecedence = new Dictionary<string, int> {{ "(", 5 }, { ")", 5 }, { "+", 4 }, { "?", 4 }, { "*", 4 }, { "·", 3 }, { "^", 2 }, { "$", 2 },
+        readonly Dictionary<string, int> dicPrecedence = new Dictionary<string, int> {{ "(", 5 }, { ")", 5 }, { "+", 4 }, { "?", 4 }, { "*", 4 }, { ".", 3 }, { "^", 2 }, { "$", 2 },
             { "|", 1 } };
         public Dictionary<string, List<string>> Insertar_Set(Dictionary<string, List<string>> dato)
         {            
@@ -83,17 +81,17 @@ namespace Proyecto_Lenguajes
             First_Last.Close();
         }
         #region Metodos_del_arbol
-        public void insertar(Queue<string> Expresion_token)
+        public void insertar(Queue<string> Expresion_token,List<string> TerminalSigns)
         {           
             Operadores.Add(".");
             Operadores.Add("*");
             Operadores.Add("?");
             Operadores.Add("+");
-            Operadores.Add("|");
+            Operadores.Add("|");            
             while (Expresion_token.Count != 0)
             {
                 var Evaluar = Expresion_token.Dequeue();
-                if (NT.ContainsKey(Evaluar))
+                if (TerminalSigns.Contains(Evaluar))
                 {
                     nodo = new Nodo(Evaluar);
                     nodo.Padre = null;
@@ -116,7 +114,7 @@ namespace Proyecto_Lenguajes
                             Console.WriteLine("Faltan operandos 2");
                         }
 
-                        Temp = new Nodo(T.Pop());
+                       Nodo Temp = new Nodo(T.Pop());
                         Temp.Der = S.Pop();
                         Temp.Der.Padre = Temp;
                         Temp.Izq = S.Pop();
@@ -159,34 +157,36 @@ namespace Proyecto_Lenguajes
                     {
                         T.Push(Evaluar);
                     }
-                    else
-                    {
-                        Console.WriteLine( "Faltan operandos 5");                       
-                    }
                 }
-                while (T.Count() > 0)
+                else
                 {
-                    if (T.Peek() == "(")
-                    {
-                        Console.WriteLine("Faltan operandos 6");                        
-                    }
-                    if (S.Count() < 2)
-                    {
-                        Console.WriteLine("Faltan operandos 7");
-                    }
-                    Nodo temp = new Nodo(T.Pop());
-                    temp.Der = S.Pop();
-                    temp.Der.Padre = temp;
-                    temp.Izq = S.Pop();
-                    temp.Izq.Padre = temp;
-                    S.Push(temp);
+                    Console.WriteLine("Token no reconocido");
                 }
-                if (S.Count() != 1)
-                {
-                    Console.WriteLine("Faltan operandos 8");                    
-                }                          
             }
-                Arbol_e = S.Pop();
+            while (T.Count() > 0)
+            {
+                if (T.Peek() == "(")
+                {
+                    Console.WriteLine( "Faltan operandos 6");
+                    
+                }
+                if (S.Count() < 2)
+                {
+                    Console.WriteLine("Faltan operandos 7");                   
+                }
+                Nodo temp = new Nodo(T.Pop());
+                temp.Der = S.Pop();
+                temp.Der.Padre = temp;
+                temp.Izq = S.Pop();
+                temp.Izq.Padre = temp;
+                S.Push(temp);
+            }
+            if (S.Count() != 1)
+            {
+               Console.WriteLine( "Faltan operandos 8");                
+            }
+
+            Arbol_e = S.Pop();
                 Recorrido(Arbol_e);
                 auto.Calcular_Follow(ContenidoArbol, conteo_FL);
                 auto.Calcular_Tabla(contenido);

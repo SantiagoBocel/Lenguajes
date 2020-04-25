@@ -15,16 +15,21 @@ namespace Proyecto_Lenguajes
         string LLaves_Tabla = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
         List<Nodo> Tabla_2 = new List<Nodo>();
         Dictionary<string, List<int>> Segunda_Tabla = new Dictionary<string, List<int>>();
-        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();         
+        Dictionary<string, List<string>> camino = new Dictionary<string, List<string>>();
+        Stack<Nodo> nodos = new Stack<Nodo>();
+        List<int> grupos = new List<int>();
+
         #region Primera Tabla Follow
         public void Calcular_Follow(Queue<Nodo> arbol , int datos)
-        {     
+        {
+            
             for (int i = 1; i < datos; i++)
             {
                 Follow.Add(i, new List<int>());
             }
             while (arbol.Count != 0)
             {
+                nodos.Push(arbol.Peek());
                 if (arbol.Peek().Dato == "*")
                 {                  
                     foreach (var item in arbol.Peek().Izq.Last)
@@ -57,6 +62,7 @@ namespace Proyecto_Lenguajes
             //        Console.WriteLine("Valores asociados:{0}", Lista);    
             //    }
             //}
+            Estados();
         }
         #endregion
         #region Segunda Tabla
@@ -116,60 +122,40 @@ namespace Proyecto_Lenguajes
                         {
                         num++;
                         }
-                    }
-                    //else
-                    //{
-                    //    num++;
-                    //    goto Regresar;
-                    //}
+                    }                    
                 }
-            }
-            //int numero = 0;
-            //foreach (var item in raiz)
-            //{                
-            //  while (Follow.ContainsKey(item.numero))
-            //   {
-            //     foreach (KeyValuePair<string,List<int>> pair in Segunda_Tabla)
-            //     {
-            //       if (pair.Value.Contains(item.numero))
-            //       {
-            //        estado = new Estado();
-            //        estado.letra = letra_siguiente[numero];
-            //        estado.numeros = Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[numero]).Value;
-            //        estado.camino = item;
-            //        numero++;
-            //       }
-            //     }
-            //  }
-
-            //}
-            //for (int i = 0; i < letra_siguiente.Length; i++)
-            //{
-            //    estado = new Estado(Segunda_Tabla.FirstOrDefault(x => x.Key == letra_siguiente[i]).Value, letra_siguiente[i]);
-
-            //}     
-            Cantidad_Estados();
-           // Tabla_Automata();
+            }                        
+            Tabla_Automata();
         }
-        #endregion
-          public void Cantidad_Estados()
-        {
-            var n = 0;
-            foreach (var item in Segunda_Tabla)
-            {
-                if (item.Value.Count != 0)
-                {
-                    n++;
-                }
-                else
-                {
-                    break;
-                }
-            }
+        #endregion    
 
-            
-            StreamWriter Estado = new StreamWriter(@"c:\Temp\Meta_E.txt");
-            Estado.WriteLine("{0}",n);
+         public void Estados()
+        {
+            int vueltas = 1;
+            foreach (var item in nodos.Peek().First)
+            {
+                grupos.Add(item); 
+            }            
+            while (nodos.Count != 0)
+            {
+                if (grupos.Contains(nodos.Peek().numero))
+                {
+                    vueltas++;
+                }
+                nodos.Pop();
+            }
+            Cantidad_Estados(vueltas);
+        }
+       
+        public void Cantidad_Estados(int n)
+        {                       
+            StreamWriter Estado = new StreamWriter(@"C:\Users\Usuario\Desktop\Cantidad_estados.txt");
+            Estado.WriteLine("Estados: {0}", n);
+            var dato = LLaves_Tabla.Split(',');
+            for (int i = 0; i < n; i++)
+            {
+                Estado.Write("{0}",dato[i]);
+            }
             Estado.Close();
         }
             public void Tabla_Automata()

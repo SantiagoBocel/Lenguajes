@@ -17,14 +17,7 @@ namespace Proyecto_Lenguajes
             List<string> L = new List<string>();
             List<string> D = new List<string>();
             List<string> C = new List<string>();
-        string Error = string.Empty;
-       public void Empezar()
-        {
-            var path = "C:\\Temp\\Meta_E.txt";
-            var archivo = new StreamReader(path);
-            var linea = archivo.ReadLine();
-        }
-      
+        string Error = string.Empty;            
         public void Start(Dictionary<string, List<string>> dato)
         {
             var P = "c:\\Temp\\NUMERROR.txt";
@@ -110,10 +103,7 @@ namespace Proyecto_Lenguajes
                     Token_char(ref n,cadena);
                     goto vuelta;
                 }
-            }
-                
-                
-                        
+            }                                                       
         }
         public void Token_Letra(ref int n, char[] cadena)
         {

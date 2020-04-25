@@ -20,6 +20,7 @@ namespace Proyecto_Lenguajes
             Dictionary<string, List<string>> Set_NT = new Dictionary<string, List<string>>();
             Dictionary<int, string[]> Token_numero = new Dictionary<int, string[]>();
             Queue<string> pila_Token = new Queue<string>();
+            List<string> Pila_NT = new List<string>();
             List<string> caracteres = new List<string>();
             List<string> Validar_num = new List<string>();            
             Codigo codigo = new Codigo();
@@ -187,11 +188,25 @@ namespace Proyecto_Lenguajes
                                 }
                                 if (Set_NT.ContainsKey(dato))
                                 {                                    
-                                 pila_Token.Enqueue(dato);                                                                                                                                                                                                                            
+                                 pila_Token.Enqueue(dato);
+                                    if (dato == "." || dato == "*" || dato == "|")
+                                    {                                     
+                                    }
+                                    else
+                                    {
+                                        Pila_NT.Add(dato);
+                                    }
                                 }
                                 if( arbol.ValorsNT.Contains(dato))                                
                                 {                                 
                                     pila_Token.Enqueue(dato);
+                                    if (dato == "." || dato == "*" || dato == "|")
+                                    {
+                                    }
+                                    else
+                                    {
+                                        Pila_NT.Add(dato);
+                                    }
                                     //solo si es una vez
                                     //if (dato == "\"")
                                     //{
@@ -208,7 +223,7 @@ namespace Proyecto_Lenguajes
                                 pila_Token.Enqueue(")");
                                 pila_Token.Enqueue(".");
                                 pila_Token.Enqueue("#");
-                                
+                                Pila_NT.Add("#");
                             }
                             else
                             {
@@ -217,7 +232,7 @@ namespace Proyecto_Lenguajes
                            
                         }
                         while (linea != "ACTIONS");                       
-                        arbol.insertar(pila_Token);                       
+                        arbol.insertar(pila_Token,Pila_NT);                       
                         #endregion
                         break;
                     case "actions":
@@ -273,7 +288,7 @@ namespace Proyecto_Lenguajes
                             }
                             NUM_TOK.WriteLine("{0} = {1}", pair.Key, T);
                         }
-                        NUM_TOK.Close();
+                        NUM_TOK.Close();                  
                         codigo.P(NT);                                                
                         #endregion
                         break;                   
